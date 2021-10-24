@@ -3,6 +3,7 @@ package ru.snapgot.todolist;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,9 +62,7 @@ public class ToDoList {
             return;
         }
         StringBuilder sbTask = new StringBuilder();
-        for (int i = 1; i < command.length; i++){
-            sbTask.append(command[i]).append(" ");
-        }
+        Arrays.stream(command,1, command.length).forEach(word -> sbTask.append(word).append(" "));
         int id = tasks.size() == 0 ? 1 : Collections.max(tasks.keySet()) + 1;
         tasks.put(id, sbTask.toString().trim());
         status.put(id, false);
@@ -96,9 +95,7 @@ public class ToDoList {
             return;
         }
         StringBuilder sbTask = new StringBuilder();
-        for (int i = 1; i < command.length; i++){
-            sbTask.append(command[i]).append(" ");
-        }
+        Arrays.stream(command,1, command.length).forEach(word -> sbTask.append(word).append(" "));
         if (tasks.entrySet()
                 .stream()
                 .noneMatch(task -> task.getValue().contains(sbTask.toString().trim()))){
@@ -161,9 +158,7 @@ public class ToDoList {
                 return;
             }
             StringBuilder sbTask = new StringBuilder();
-            for (int i = 2; i < command.length; i++){
-                sbTask.append(command[i]).append(" ");
-            }
+            Arrays.stream(command,2, command.length).forEach(word -> sbTask.append(word).append(" "));
             tasks.put(editId, sbTask.toString().trim());
         } catch (NumberFormatException e) {
             System.out.println("Введенное id не является числом");
