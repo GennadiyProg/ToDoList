@@ -3,10 +3,7 @@ package ru.snapgot.todolist;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ToDoList {
     public static final String ADD = "add";
@@ -16,8 +13,7 @@ public class ToDoList {
     public static final String DELETE = "delete";
     public static final String EDIT = "edit";
     public static final String SEARCH = "search";
-    public static HashMap<Integer, String> tasks = new HashMap<>();
-    public static HashMap<Integer, Boolean> status = new HashMap<>();
+    public static ArrayList<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         while (true){
@@ -62,10 +58,11 @@ public class ToDoList {
             return;
         }
         StringBuilder sbTask = new StringBuilder();
-        Arrays.stream(command,1, command.length).forEach(word -> sbTask.append(word).append(" "));
-        int id = tasks.size() == 0 ? 1 : Collections.max(tasks.keySet()) + 1;
-        tasks.put(id, sbTask.toString().trim());
-        status.put(id, false);
+        for (int i = 1; i < command.length; i++){
+            sbTask.append(command[i]).append(" ");
+        }
+        int id = tasks.size() == 0 ? 1 : tasks.get(tasks.size() - 1).getId() + 1;
+        tasks.add(new Task(id, sbTask.toString().trim()));
     }
 
     private static void print(String[] command){
@@ -74,16 +71,15 @@ public class ToDoList {
                 System.out.println("Задачи отсутствуют");
                 return;
             }
-            tasks.forEach((id, task) -> System.out.printf("%d. [%s] %s%n", id, status.get(id) ?  "X" : " ", task));
+            tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isStatus() ?  "X" : " ", task.getDescribe()));
         } else if (command.length == 1){
-            if (status.entrySet().stream().allMatch(Map.Entry::getValue)){
+            if (tasks.stream().allMatch(Task::isStatus)){
                 System.out.println("Задачи отсутствуют");
                 return;
             }
-            tasks.keySet()
-                    .stream()
-                    .filter(id -> !status.get(id))
-                    .forEach(id -> System.out.printf("%d. [ ] %s%n", id, tasks.get(id)));
+            tasks.stream()
+                    .filter(task -> !task.isStatus())
+                    .forEach(task -> System.out.printf("%d. [ ] %s%n", task.getId(), task.getDescribe()));
         } else {
             System.out.println("Неверные агрументы команды 'print'");
         }
@@ -95,17 +91,17 @@ public class ToDoList {
             return;
         }
         StringBuilder sbTask = new StringBuilder();
-        Arrays.stream(command,1, command.length).forEach(word -> sbTask.append(word).append(" "));
-        if (tasks.entrySet()
-                .stream()
-                .noneMatch(task -> task.getValue().contains(sbTask.toString().trim()))){
+        for (int i = 1; i < command.length; i++){
+            sbTask.append(command[i]).append(" ");
+        }
+        if (tasks.stream()
+                .noneMatch(task -> task.getDescribe().contains(sbTask.toString().trim()))){
             System.out.println("Задач с такое подстрокой нет");
             return;
         }
-        tasks.keySet()
-                .stream()
-                .filter(task -> tasks.get(task).contains(sbTask.toString().trim()))
-                .forEach(id -> System.out.printf("%d. [%s] %s%n", id, status.get(id) ?  "X" : " ", tasks.get(id)));
+        tasks.stream()
+                .filter(task -> task.getDescribe().contains(sbTask.toString().trim()))
+                .forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isStatus() ?  "X" : " ", task.getDescribe()));
     }
 
     private static void toggle(String[] command){
@@ -116,8 +112,8 @@ public class ToDoList {
         int toggleId;
         try {
             toggleId = Integer.parseInt(command[1]);
-            if (tasks.keySet().stream().anyMatch(id -> id == toggleId)){
-                status.replace(toggleId, !status.get(toggleId));
+            if (tasks.stream().anyMatch(task -> task.getId() == toggleId)){
+                tasks.stream().filter(task -> task.getId() == toggleId).forEach(task -> task.setStatus(!task.isStatus()));
             } else {
                 System.out.println("Задачи с таким id не существует");
             }
@@ -134,9 +130,8 @@ public class ToDoList {
         int deletedId;
         try {
             deletedId = Integer.parseInt(command[1]);
-            if (tasks.keySet().stream().anyMatch(id -> id == deletedId)){
-                tasks.remove(deletedId);
-                status.remove(deletedId);
+            if (tasks.stream().anyMatch(task -> task.getId() == deletedId)){
+                tasks.remove(tasks.stream().filter(task -> task.getId() == deletedId).findAny().get());
             } else {
                 System.out.println("Задачи с таким id не существует");
             }
@@ -153,13 +148,15 @@ public class ToDoList {
         int editId;
         try {
             editId = Integer.parseInt(command[1]);
-            if (tasks.keySet().stream().noneMatch(id -> id == editId)){
+            if (tasks.stream().noneMatch(task -> task.getId() == editId)){
                 System.out.println("Задачи с таким id не существует");
                 return;
             }
             StringBuilder sbTask = new StringBuilder();
-            Arrays.stream(command,2, command.length).forEach(word -> sbTask.append(word).append(" "));
-            tasks.put(editId, sbTask.toString().trim());
+            for (int i = 2; i < command.length; i++){
+                sbTask.append(command[i]).append(" ");
+            }
+            tasks.stream().filter(task -> task.getId() == editId).forEach(task -> task.setDescribe(sbTask.toString().trim()));
         } catch (NumberFormatException e) {
             System.out.println("Введенное id не является числом");
         }
