@@ -4,16 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ToDoList {
-    public static final String ADD = "add";
-    public static final String PRINT = "print";
-    public static final String TOGGLE = "toggle";
-    public static final String QUIT = "quit";
-    public static final String DELETE = "delete";
-    public static final String EDIT = "edit";
-    public static final String SEARCH = "search";
     public static ArrayList<Task> tasks = new ArrayList<>();
+    public static HashMap<String, Consumer<String[]>> commands = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         while (true){
@@ -24,30 +19,19 @@ public class ToDoList {
                 System.out.println("Отсутствует команда");
                 continue;
             }
-            switch (command[0]){
-                case ADD:
-                    add(command);
-                    break;
-                case PRINT:
-                    print(command);
-                    break;
-                case SEARCH:
-                    search(command);
-                    break;
-                case TOGGLE:
-                    toggle(command);
-                    break;
-                case DELETE:
-                    delete(command);
-                    break;
-                case EDIT:
-                    edit(command);
-                    break;
-                case QUIT:
+            commands.put("add", ToDoList::add);
+            commands.put("print", ToDoList::print);
+            commands.put("search", ToDoList::search);
+            commands.put("toggle", ToDoList::toggle);
+            commands.put("delete", ToDoList::delete);
+            commands.put("edit", ToDoList::edit);
+            try{
+                commands.get(command[0]).accept(command);
+            } catch (NullPointerException e){
+                if (command[0].equals("quit")){
                     return;
-                default:
-                    System.out.println("Введена некорректная команда");
-                    break;
+                }
+                System.out.println("Введена неизвестная команда");
             }
         }
     }
@@ -131,7 +115,7 @@ public class ToDoList {
         try {
             deletedId = Integer.parseInt(command[1]);
             if (tasks.stream().anyMatch(task -> task.getId() == deletedId)){
-                tasks.remove(tasks.stream().filter(task -> task.getId() == deletedId).findAny().get());
+                tasks.remove(tasks.stream().filter(task -> task.getId() == deletedId).findAny().orElse(null));
             } else {
                 System.out.println("Задачи с таким id не существует");
             }
