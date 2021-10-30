@@ -6,10 +6,11 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class ProcessingUserInput {
-    public static HashMap<String, Consumer<String[]>> commands = new HashMap<>();
+public class ProcessingInput implements InputHandler {
+    private HashMap<String, Consumer<String[]>> commands = new HashMap<>();
 
-    public static void processingInput() throws IOException {
+    @Override
+    public void processingInput() throws IOException {
         while (true){
             System.out.print("Ввод команды: ");
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
@@ -18,12 +19,12 @@ public class ProcessingUserInput {
                 System.out.println("Отсутствует команда");
                 continue;
             }
-            commands.put("add", ProcessingUserInput::add);
-            commands.put("print", ProcessingUserInput::print);
-            commands.put("search", ProcessingUserInput::search);
-            commands.put("toggle", ProcessingUserInput::toggle);
-            commands.put("delete", ProcessingUserInput::delete);
-            commands.put("edit", ProcessingUserInput::edit);
+            commands.put("add", ProcessingInput::add);
+            commands.put("print", ProcessingInput::print);
+            commands.put("search", ProcessingInput::search);
+            commands.put("toggle", ProcessingInput::toggle);
+            commands.put("delete", ProcessingInput::delete);
+            commands.put("edit", ProcessingInput::edit);
             try{
                 commands.get(command[0]).accept(command);
             } catch (NullPointerException e){
