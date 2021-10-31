@@ -2,15 +2,17 @@ package ru.snapgot.todolist;
 
 import java.util.ArrayList;
 
-public class TaskDAO {
-    public static ArrayList<Task> tasks = new ArrayList<>();
+public class TaskDAO implements TaskHandler {
+    private ArrayList<Task> tasks = new ArrayList<>();
 
-    public static void addTask(String task){
+    @Override
+    public void addTask(String task){
         int id = tasks.size() == 0 ? 1 : tasks.get(tasks.size() - 1).getId() + 1;
         tasks.add(new Task(id, task));
     }
 
-    public static void printTask(boolean argAll){
+    @Override
+    public void printTask(boolean argAll){
         if (argAll){
             if (tasks.isEmpty()) {
                 System.out.println("Задачи отсутствуют");
@@ -28,7 +30,8 @@ public class TaskDAO {
         }
     }
 
-    public static void searchTask(String subString){
+    @Override
+    public void searchTask(String subString){
         if (tasks.stream()
                 .noneMatch(task -> task.getDescribe().contains(subString))){
             System.out.println("Задач с такое подстрокой нет");
@@ -39,7 +42,8 @@ public class TaskDAO {
                 .forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isStatus() ?  "X" : " ", task.getDescribe()));
     }
 
-    public static void toggleTask(int id){
+    @Override
+    public void toggleTask(int id){
         if (tasks.stream().anyMatch(task -> task.getId() == id)){
             tasks.stream().filter(task -> task.getId() == id).forEach(task -> task.setStatus(!task.isStatus()));
         } else {
@@ -47,7 +51,8 @@ public class TaskDAO {
         }
     }
 
-    public static void deleteTask(int id){
+    @Override
+    public void deleteTask(int id){
         if (tasks.stream().anyMatch(task -> task.getId() == id)){
             tasks.remove(tasks.stream().filter(task -> task.getId() == id).findAny().orElse(null));
         } else {
@@ -55,7 +60,8 @@ public class TaskDAO {
         }
     }
 
-    public static void editTask(int id, String newTask){
+    @Override
+    public void editTask(int id, String newTask){
         if (tasks.stream().noneMatch(task -> task.getId() == id)){
             System.out.println("Задачи с таким id не существует");
             return;
