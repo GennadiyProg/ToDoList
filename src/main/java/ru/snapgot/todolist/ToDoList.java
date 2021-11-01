@@ -5,8 +5,9 @@ import java.io.IOException;
 public class ToDoList {
 
     public static void main(String[] args) throws IOException {
-        TaskHandler taskHandler = new TaskDao();
-        InputHandler inputHandler = new ProcessingInput(taskHandler);
-        inputHandler.processingInput();
+        TaskDao taskDao = new InMemoryTaskDao();
+        TaskManager taskManager = new TaskManagerImlI(taskDao);
+        ConsoleHandler consoleHandler = new ConsoleHandlerImlI(taskManager);
+        consoleHandler.processingInput();
     }
 }

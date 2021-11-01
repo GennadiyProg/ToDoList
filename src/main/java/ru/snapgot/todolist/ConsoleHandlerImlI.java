@@ -4,14 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class ProcessingInput implements InputHandler {
-    private  HashMap<String, Consumer<String[]>> commands = new HashMap<>();
-    private TaskHandler taskHandler;
+public class ConsoleHandlerImlI implements ConsoleHandler {
+    private HashMap<String, Consumer<String[]>> commands = new HashMap<>();
+    private TaskManager taskManager;
 
-    ProcessingInput(TaskHandler taskHandler){
-        this.taskHandler = taskHandler;
+    ConsoleHandlerImlI(TaskManager taskManager){
+        this.taskManager = taskManager;
     }
 
     @Override
@@ -24,12 +25,12 @@ public class ProcessingInput implements InputHandler {
                 System.out.println("Отсутствует команда");
                 continue;
             }
-            commands.put("add", this::add);
-            commands.put("print", this::print);
-            commands.put("search", this::search);
-            commands.put("toggle", this::toggle);
-            commands.put("delete", this::delete);
-            commands.put("edit", this::edit);
+            commands.put("add", this::addCommand);
+            commands.put("print", this::printCommand);
+            commands.put("search", this::searchCommand);
+            commands.put("toggle", this::toggleCommand);
+            commands.put("delete", this::deleteCommand);
+            commands.put("edit", this::editCommand);
             try{
                 commands.get(command[0]).accept(command);
             } catch (NullPointerException e){
@@ -41,7 +42,7 @@ public class ProcessingInput implements InputHandler {
         }
     }
 
-    private void add(String[] command){
+    private void addCommand(String[] command){
         if (command.length == 1){
             System.out.println("Не было ввода задачи");
             return;
@@ -50,32 +51,45 @@ public class ProcessingInput implements InputHandler {
         for (int i = 1; i < command.length; i++){
             sbTask.append(command[i]).append(" ");
         }
-        taskHandler.addTask(sbTask.toString().trim());
+        taskManager.add(sbTask.toString().trim());
     }
 
-    private void print(String[] command){
+    private void printCommand(String[] command){
+        List<Task> tasks;
         if (command.length == 2 && command[1].equals("all")){
-            taskHandler.printTask(true);
+            tasks = taskManager.print(true);
         } else if (command.length == 1){
-            taskHandler.printTask(false);
+            tasks = taskManager.print(false);
         } else {
             System.out.println("Неверные агрументы команды 'print'");
+            return;
+        }
+        if (tasks.isEmpty()){
+            System.out.println("Задачи отсутствуют");
+        } else {
+            tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
         }
     }
 
-    private void search(String[] command){
+    private void searchCommand(String[] command){
         if (command.length == 1){
             System.out.println("Не было ввода подстроки");
             return;
         }
         StringBuilder sbTask = new StringBuilder();
+        List<Task> tasks;
         for (int i = 1; i < command.length; i++){
             sbTask.append(command[i]).append(" ");
         }
-        taskHandler.searchTask(sbTask.toString().trim());
+        tasks = taskManager.search(sbTask.toString().trim());
+        if (tasks.isEmpty()){
+            System.out.println("Задач с такое подстрокой нет");
+        } else {
+            tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
+        }
 }
 
-    private void toggle(String[] command){
+    private void toggleCommand(String[] command){
         if (command.length != 2){
             System.out.println("Неверные агрументы команды 'toggle'");
             return;
@@ -83,13 +97,13 @@ public class ProcessingInput implements InputHandler {
         int toggleId;
         try {
             toggleId = Integer.parseInt(command[1]);
-            taskHandler.toggleTask(toggleId);
+            taskManager.toggle(toggleId);
         } catch (NumberFormatException e) {
             System.out.println("Введенное id не является числом");
         }
     }
 
-    private void delete(String[] command){
+    private void deleteCommand(String[] command){
         if (command.length != 2){
             System.out.println("Неверные агрументы команды 'delete'");
             return;
@@ -97,13 +111,13 @@ public class ProcessingInput implements InputHandler {
         int deletedId;
         try {
             deletedId = Integer.parseInt(command[1]);
-            taskHandler.deleteTask(deletedId);
+            taskManager.delete(deletedId);
         } catch (NumberFormatException e) {
             System.out.println("Введенное id не является числом");
         }
     }
 
-    private void edit(String[] command){
+    private void editCommand(String[] command){
         if (command.length < 3){
             System.out.println("Неверные агрументы команды 'edit'");
             return;
@@ -115,7 +129,7 @@ public class ProcessingInput implements InputHandler {
             for (int i = 2; i < command.length; i++){
                 sbTask.append(command[i]).append(" ");
             }
-            taskHandler.editTask(editId, sbTask.toString().trim());
+            taskManager.edit(editId, sbTask.toString().trim());
         } catch (NumberFormatException e) {
             System.out.println("Введенное id не является числом");
         }
