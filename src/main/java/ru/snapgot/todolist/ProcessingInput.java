@@ -8,7 +8,11 @@ import java.util.function.Consumer;
 
 public class ProcessingInput implements InputHandler {
     private  HashMap<String, Consumer<String[]>> commands = new HashMap<>();
-    private TaskHandler taskHandler = new TaskDAO();
+    private TaskHandler taskHandler;
+
+    ProcessingInput(TaskHandler taskHandler){
+        this.taskHandler = taskHandler;
+    }
 
     @Override
     public void processingInput() throws IOException {

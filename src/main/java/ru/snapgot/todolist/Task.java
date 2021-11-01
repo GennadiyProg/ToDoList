@@ -2,12 +2,12 @@ package ru.snapgot.todolist;
 
 public class Task {
     private int id;
-    private String describe;
-    private boolean status;
+    private String description;
+    private boolean completed;
 
-    public Task(int id, String describe) {
+    public Task(int id, String description) {
         this.id = id;
-        this.describe = describe;
+        this.description = description;
     }
 
     public int getId() {
@@ -18,19 +18,17 @@ public class Task {
         this.id = id;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
+    public boolean isCompleted() {return completed;}
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

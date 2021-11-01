@@ -2,7 +2,7 @@ package ru.snapgot.todolist;
 
 import java.util.ArrayList;
 
-public class TaskDAO implements TaskHandler {
+public class TaskDao implements TaskHandler {
     private ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
@@ -18,34 +18,34 @@ public class TaskDAO implements TaskHandler {
                 System.out.println("Задачи отсутствуют");
                 return;
             }
-            tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isStatus() ?  "X" : " ", task.getDescribe()));
+            tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
         } else {
-            if (tasks.stream().allMatch(Task::isStatus)){
+            if (tasks.stream().allMatch(Task::isCompleted)){
                 System.out.println("Задачи отсутствуют");
                 return;
             }
             tasks.stream()
-                    .filter(task -> !task.isStatus())
-                    .forEach(task -> System.out.printf("%d. [ ] %s%n", task.getId(), task.getDescribe()));
+                    .filter(task -> !task.isCompleted())
+                    .forEach(task -> System.out.printf("%d. [ ] %s%n", task.getId(), task.getDescription()));
         }
     }
 
     @Override
     public void searchTask(String subString){
         if (tasks.stream()
-                .noneMatch(task -> task.getDescribe().contains(subString))){
+                .noneMatch(task -> task.getDescription().contains(subString))){
             System.out.println("Задач с такое подстрокой нет");
             return;
         }
         tasks.stream()
-                .filter(task -> task.getDescribe().contains(subString))
-                .forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isStatus() ?  "X" : " ", task.getDescribe()));
+                .filter(task -> task.getDescription().contains(subString))
+                .forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
     }
 
     @Override
     public void toggleTask(int id){
         if (tasks.stream().anyMatch(task -> task.getId() == id)){
-            tasks.stream().filter(task -> task.getId() == id).forEach(task -> task.setStatus(!task.isStatus()));
+            tasks.stream().filter(task -> task.getId() == id).forEach(task -> task.setCompleted(!task.isCompleted()));
         } else {
             System.out.println("Задачи с таким id не существует");
         }
@@ -66,6 +66,6 @@ public class TaskDAO implements TaskHandler {
             System.out.println("Задачи с таким id не существует");
             return;
         }
-        tasks.stream().filter(task -> task.getId() == id).forEach(task -> task.setDescribe(newTask));
+        tasks.stream().filter(task -> task.getId() == id).forEach(task -> task.setDescription(newTask));
     }
 }
