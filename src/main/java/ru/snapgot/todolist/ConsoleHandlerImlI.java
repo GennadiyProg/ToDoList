@@ -57,9 +57,9 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
     private void printCommand(String[] command){
         List<Task> tasks;
         if (command.length == 2 && command[1].equals("all")){
-            tasks = taskManager.print(true);
+            tasks = taskManager.getTasks(true);
         } else if (command.length == 1){
-            tasks = taskManager.print(false);
+            tasks = taskManager.getTasks(false);
         } else {
             System.out.println("Неверные агрументы команды 'print'");
             return;
@@ -81,7 +81,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
         for (int i = 1; i < command.length; i++){
             sbTask.append(command[i]).append(" ");
         }
-        tasks = taskManager.search(sbTask.toString().trim());
+        tasks = taskManager.getFilteredTasks(sbTask.toString().trim());
         if (tasks.isEmpty()){
             System.out.println("Задач с такое подстрокой нет");
         } else {
