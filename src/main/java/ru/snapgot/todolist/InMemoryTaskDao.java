@@ -7,9 +7,10 @@ public class InMemoryTaskDao implements TaskDao {
     private ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
-    public void addTask(String description){
+    public void addTask(Task task){
         int id = tasks.size() == 0 ? 1 : tasks.get(tasks.size() - 1).getId() + 1;
-        tasks.add(new Task(id, description));
+        task.setId(id);
+        tasks.add(task);
     }
 
     @Override
@@ -35,8 +36,7 @@ public class InMemoryTaskDao implements TaskDao {
 
     @Override
     public Task getTaskById(int id){
-        List<Task> resultTask = tasks.stream().filter(task -> task.getId() == id).toList();
-        return !resultTask.isEmpty() ? resultTask.get(0) : null;
+        return tasks.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
     }
 
     @Override

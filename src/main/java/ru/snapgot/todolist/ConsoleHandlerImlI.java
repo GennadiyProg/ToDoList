@@ -57,9 +57,9 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
     private void printCommand(String[] command){
         List<Task> tasks;
         if (command.length == 2 && command[1].equals("all")){
-            tasks = taskManager.getTasks(true);
+            tasks = taskManager.getAllTasks();
         } else if (command.length == 1){
-            tasks = taskManager.getTasks(false);
+            tasks = taskManager.getUncompletedTasks();
         } else {
             System.out.println("Неверные агрументы команды 'print'");
             return;

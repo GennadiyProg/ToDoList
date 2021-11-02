@@ -11,16 +11,18 @@ public class TaskManagerImlI implements TaskManager{
 
     @Override
     public void add(String description){
-        taskDao.addTask(description);
+        Task task = new Task(description, false);
+        taskDao.addTask(task);
     }
 
     @Override
-    public List<Task> getTasks(boolean argAll){
-        if (argAll){
-            return taskDao.getAllTasks();
-        } else {
-            return taskDao.getUncompletedTasks();
-        }
+    public List<Task> getAllTasks(){
+        return taskDao.getAllTasks();
+    }
+
+    @Override
+    public List<Task> getUncompletedTasks(){
+        return taskDao.getUncompletedTasks();
     }
 
     @Override

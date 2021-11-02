@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface TaskManager {
     void add(String task);
-    List<Task> getTasks(boolean argAll);
+    List<Task> getAllTasks();
+    List<Task> getUncompletedTasks();
     List<Task> getFilteredTasks(String description);
     void toggle(int id);
     void delete(int id);

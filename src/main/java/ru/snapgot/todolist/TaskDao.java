@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskDao {
-    void addTask(String description);
+    void addTask(Task task);
     ArrayList<Task> getAllTasks();
     List<Task> getCompletedTasks();
     List<Task> getUncompletedTasks();
