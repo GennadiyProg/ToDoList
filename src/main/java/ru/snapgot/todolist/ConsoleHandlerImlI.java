@@ -39,26 +39,28 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
                 commands.get(command[0]).accept(command);
             } catch (NullPointerException e){
                 if (command[0].equals("quit")){
+                    LOGGER.debug("Была введена команда 'quit'");
                     return;
                 }
-                LOGGER.error("Введена неизвестная команда");
+                System.out.println("Введена неизвестная команда");
+                LOGGER.error("Введена неизвестная команда", e);
             }
         }
     }
 
     private void addCommand(String[] command){
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'add' с аргументами: " + args);
         if (command.length == 1){
             System.out.println("Не было ввода задачи");
             return;
         }
-        StringBuilder sbTask = new StringBuilder();
-        for (int i = 1; i < command.length; i++){
-            sbTask.append(command[i]).append(" ");
-        }
-        taskManager.add(sbTask.toString().trim());
+        taskManager.add(args);
     }
 
     private void printCommand(String[] command){
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'add' с аргументами: " + args);
         List<Task> tasks;
         if (command.length == 2 && command[1].equals("all")){
             tasks = taskManager.getAllTasks();
@@ -72,10 +74,13 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             System.out.println("Задачи отсутствуют");
         } else {
             tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
+            tasks.forEach(task -> LOGGER.debug(task.getId() + "." + (task.isCompleted() ?  " [X] " : " [ ] ") + task.getDescription()));
         }
     }
 
     private void searchCommand(String[] command){
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'search' с аргументами: " + args);
         if (command.length == 1){
             System.out.println("Не было ввода подстроки");
             return;
@@ -90,30 +95,30 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             System.out.println("Задач с такое подстрокой нет");
         } else {
             tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
+            tasks.forEach(task -> LOGGER.debug(task.getId() + "." + (task.isCompleted() ?  " [X] " : " [ ] ") + task.getDescription()));
         }
     }
 
     private void toggleCommand(String[] command){
-        try {
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'toggle' с аргументами: " + args);
             if (command.length != 2) {
-                throw new ToggleException("Неверные аргументы коменды 'toggle'");
+                System.out.println("Неверные аргументы коменды 'toggle'");
+                LOGGER.error(args + " - Неверные аргументы коменды 'toggle'");
             }
+        try {
             int toggleId;
             toggleId = Integer.parseInt(command[1]);
             taskManager.toggle(toggleId);
-        } catch (ToggleException e){
-            StringBuilder sbCommand = new StringBuilder();
-            for (int i = 1; i < command.length; i++){
-                sbCommand.append(command[i]).append(" ");
-            }
-            sbCommand.append("- ").append(e.getMessage());
-            LOGGER.debug(sbCommand.toString());
         } catch (NumberFormatException e){
-            LOGGER.error("Введенное id не является числом");
+            System.out.println("Введенное id не является числом");
+            LOGGER.error("Введенное id не является числом", e);
         }
     }
 
     private void deleteCommand(String[] command){
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'delete' с аргументами: " + args);
         if (command.length != 2){
             System.out.println("Неверные агрументы команды 'delete'");
             return;
@@ -123,11 +128,14 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             deletedId = Integer.parseInt(command[1]);
             taskManager.delete(deletedId);
         } catch (NumberFormatException e) {
-            LOGGER.error("Введенное id не является числом");
+            System.out.println("Введенное id не является числом");
+            LOGGER.error("Введенное id не является числом", e);
         }
     }
 
     private void editCommand(String[] command){
+        String args = createString(command, 1);
+        LOGGER.debug("Была введена команда 'edit' с аргументами: " + args);
         if (command.length < 3){
             System.out.println("Неверные агрументы команды 'edit'");
             return;
@@ -135,13 +143,18 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
         int editId;
         try {
             editId = Integer.parseInt(command[1]);
-            StringBuilder sbTask = new StringBuilder();
-            for (int i = 2; i < command.length; i++){
-                sbTask.append(command[i]).append(" ");
-            }
-            taskManager.edit(editId, sbTask.toString().trim());
+            taskManager.edit(editId, createString(command, 2));
         } catch (NumberFormatException e) {
-            LOGGER.error("Введенное id не является числом");
+            System.out.println("Введенное id не является числом");
+            LOGGER.error("Введенное id не является числом", e);
         }
+    }
+
+    private String createString(String[] arrString, int index){
+        StringBuilder sbString = new StringBuilder();
+        for (int i = index; i < arrString.length; i++){
+            sbString.append(arrString[i]).append(" ");
+        }
+        return sbString.toString().trim();
     }
 }
