@@ -1,5 +1,8 @@
 package ru.snapgot.todolist;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +11,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ConsoleHandlerImlI implements ConsoleHandler {
+    private final Logger LOGGER = LoggerFactory.getLogger(ConsoleHandlerImlI.class);
     private HashMap<String, Consumer<String[]>> commands = new HashMap<>();
     private TaskManager taskManager;
 
@@ -37,7 +41,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
                 if (command[0].equals("quit")){
                     return;
                 }
-                System.out.println("Введена неизвестная команда");
+                LOGGER.error("Введена неизвестная команда");
             }
         }
     }
@@ -87,19 +91,25 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
         } else {
             tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
         }
-}
+    }
 
     private void toggleCommand(String[] command){
-        if (command.length != 2){
-            System.out.println("Неверные агрументы команды 'toggle'");
-            return;
-        }
-        int toggleId;
         try {
+            if (command.length != 2) {
+                throw new ToggleException("Неверные аргументы коменды 'toggle'");
+            }
+            int toggleId;
             toggleId = Integer.parseInt(command[1]);
             taskManager.toggle(toggleId);
-        } catch (NumberFormatException e) {
-            System.out.println("Введенное id не является числом");
+        } catch (ToggleException e){
+            StringBuilder sbCommand = new StringBuilder();
+            for (int i = 1; i < command.length; i++){
+                sbCommand.append(command[i]).append(" ");
+            }
+            sbCommand.append("- ").append(e.getMessage());
+            LOGGER.debug(sbCommand.toString());
+        } catch (NumberFormatException e){
+            LOGGER.error("Введенное id не является числом");
         }
     }
 
@@ -113,7 +123,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             deletedId = Integer.parseInt(command[1]);
             taskManager.delete(deletedId);
         } catch (NumberFormatException e) {
-            System.out.println("Введенное id не является числом");
+            LOGGER.error("Введенное id не является числом");
         }
     }
 
@@ -131,7 +141,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             }
             taskManager.edit(editId, sbTask.toString().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Введенное id не является числом");
+            LOGGER.error("Введенное id не является числом");
         }
     }
 }
