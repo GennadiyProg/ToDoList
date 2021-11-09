@@ -50,7 +50,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void addCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'add' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'add' с аргументами: {}", args);
         if (command.length == 1){
             System.out.println("Не было ввода задачи");
             return;
@@ -60,7 +60,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void printCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'add' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'add' с аргументами: {}", args);
         List<Task> tasks;
         if (command.length == 2 && command[1].equals("all")){
             tasks = taskManager.getAllTasks();
@@ -80,7 +80,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void searchCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'search' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'search' с аргументами: {}", args);
         if (command.length == 1){
             System.out.println("Не было ввода подстроки");
             return;
@@ -101,7 +101,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void toggleCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'toggle' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'toggle' с аргументами: {}", args);
             if (command.length != 2) {
                 System.out.println("Неверные аргументы коменды 'toggle'");
                 LOGGER.error(args + " - Неверные аргументы коменды 'toggle'");
@@ -118,7 +118,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void deleteCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'delete' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'delete' с аргументами: {}", args);
         if (command.length != 2){
             System.out.println("Неверные агрументы команды 'delete'");
             return;
@@ -135,7 +135,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
 
     private void editCommand(String[] command){
         String args = createString(command, 1);
-        LOGGER.debug("Была введена команда 'edit' с аргументами: " + args);
+        LOGGER.debug("Была введена команда 'edit' с аргументами: {}", args);
         if (command.length < 3){
             System.out.println("Неверные агрументы команды 'edit'");
             return;
