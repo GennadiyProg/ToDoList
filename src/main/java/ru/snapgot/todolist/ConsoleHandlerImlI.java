@@ -74,7 +74,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             System.out.println("Задачи отсутствуют");
         } else {
             tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
-            tasks.forEach(task -> LOGGER.debug("{}. [{}] {}", task.getId(), (task.isCompleted() ?  " [X] " : " [ ] "), task.getDescription()));
+            tasks.forEach(task -> LOGGER.debug("{}. [{}] {}", task.getId(), (task.isCompleted() ?  "X" : " "), task.getDescription()));
         }
     }
 
@@ -95,7 +95,7 @@ public class ConsoleHandlerImlI implements ConsoleHandler {
             System.out.println("Задач с такое подстрокой нет");
         } else {
             tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
-            tasks.forEach(task -> LOGGER.debug("{}. [{}] {}", task.getId(), (task.isCompleted() ?  " [X] " : " [ ] "), task.getDescription()));
+            tasks.forEach(task -> LOGGER.debug("{}. [{}] {}", task.getId(), (task.isCompleted() ?  "X" : " "), task.getDescription()));
         }
     }
 
