@@ -1,4 +1,4 @@
-package ru.snapgot.todolist;
+package ru.snapgot.todolist.model;
 
 public class Task {
     private int id;

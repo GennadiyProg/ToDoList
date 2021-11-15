@@ -1,10 +1,13 @@
-package ru.snapgot.todolist;
+package ru.snapgot.todolist.logic.impI;
+
+import ru.snapgot.todolist.logic.TaskDao;
+import ru.snapgot.todolist.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryTaskDao implements TaskDao {
-    private ArrayList<Task> tasks = new ArrayList<>();
+    private final ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
     public void addTask(Task task){
@@ -16,11 +19,6 @@ public class InMemoryTaskDao implements TaskDao {
     @Override
     public ArrayList<Task> getAllTasks(){
         return tasks;
-    }
-
-    @Override
-    public List<Task> getCompletedTasks(){
-        return tasks.stream().filter(Task::isCompleted).toList();
     }
 
     @Override
