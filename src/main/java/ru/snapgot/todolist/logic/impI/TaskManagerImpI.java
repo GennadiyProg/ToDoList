@@ -1,11 +1,15 @@
-package ru.snapgot.todolist;
+package ru.snapgot.todolist.logic.impI;
+
+import ru.snapgot.todolist.logic.TaskDao;
+import ru.snapgot.todolist.logic.TaskManager;
+import ru.snapgot.todolist.model.Task;
 
 import java.util.List;
 
-public class TaskManagerImlI implements TaskManager{
-    private TaskDao taskDao;
+public class TaskManagerImpI implements TaskManager {
+    private final TaskDao taskDao;
 
-    public TaskManagerImlI(TaskDao taskDao) {
+    public TaskManagerImpI(TaskDao taskDao) {
         this.taskDao = taskDao;
     }
 

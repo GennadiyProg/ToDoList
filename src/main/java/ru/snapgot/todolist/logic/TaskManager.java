@@ -1,6 +1,7 @@
-package ru.snapgot.todolist;
+package ru.snapgot.todolist.logic;
 
-import java.util.ArrayList;
+import ru.snapgot.todolist.model.Task;
+
 import java.util.List;
 
 public interface TaskManager {
