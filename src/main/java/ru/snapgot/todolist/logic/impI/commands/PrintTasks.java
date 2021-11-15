@@ -11,7 +11,14 @@ public class PrintTasks implements Consumer<List<Task>> {
 
     @Override
     public void accept(List<Task> tasks) {
-        tasks.forEach(task -> System.out.printf("%d. [%s] %s%n", task.getId(), task.isCompleted() ?  "X" : " ", task.getDescription()));
-        tasks.forEach(task -> log.debug("{}. [{}] {}", task.getId(), (task.isCompleted() ?  "X" : " "), task.getDescription()));
+        StringBuilder stringBuilder = new StringBuilder();
+        tasks.forEach(task -> {
+            StringBuilder message = new StringBuilder();
+            message.append(task.getId()).append(".")
+                    .append(task.isCompleted() ?  " [X] " : " [ ] ").append(task.getDescription());
+            stringBuilder.append(message).append("\n");
+        });
+        System.out.print(stringBuilder);
+        log.debug(stringBuilder.toString());
     }
 }

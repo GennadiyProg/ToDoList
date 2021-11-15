@@ -27,7 +27,6 @@ public class ToDoList {
         ProcessingInput processingInput = new ProcessingInput();
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            System.out.print("Ввод команды: ");
             CommandDescription commandDescription = processingInput.processingInput(console.readLine());
             if (commandDescription != null){
                 commandHandler.callingCommand(commandDescription);
