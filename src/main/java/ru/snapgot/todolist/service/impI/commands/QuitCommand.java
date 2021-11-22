@@ -1,9 +1,11 @@
-package ru.snapgot.todolist.logic.impI.commands;
+package ru.snapgot.todolist.service.impI.commands;
 
+import org.springframework.stereotype.Component;
 import ru.snapgot.todolist.parser.CommandDescription;
 
 import java.util.function.Consumer;
 
+@Component
 public class QuitCommand  implements Consumer<CommandDescription> {
 
     @Override

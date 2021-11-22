@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.logic;
+package ru.snapgot.todolist.dao;
 
 import ru.snapgot.todolist.model.Task;
 

@@ -1,13 +1,17 @@
-package ru.snapgot.todolist.logic.impI.commands;
+package ru.snapgot.todolist.service.impI.commands;
 
-import ru.snapgot.todolist.logic.ErrorHandler;
-import ru.snapgot.todolist.logic.TaskManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.snapgot.todolist.service.ErrorHandler;
+import ru.snapgot.todolist.service.TaskManager;
 import ru.snapgot.todolist.parser.CommandDescription;
 
 import java.util.function.Consumer;
 
+@Component
 public class EditCommand extends CommandBase implements Consumer<CommandDescription> {
 
+    @Autowired
     public EditCommand(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
 
     @Override

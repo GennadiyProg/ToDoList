@@ -1,14 +1,18 @@
-package ru.snapgot.todolist.logic.impI;
+package ru.snapgot.todolist.service.impI;
 
-import ru.snapgot.todolist.logic.TaskDao;
-import ru.snapgot.todolist.logic.TaskManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.snapgot.todolist.dao.TaskDao;
 import ru.snapgot.todolist.model.Task;
+import ru.snapgot.todolist.service.TaskManager;
 
 import java.util.List;
 
+@Component
 public class TaskManagerImpI implements TaskManager {
     private final TaskDao taskDao;
 
+    @Autowired
     public TaskManagerImpI(TaskDao taskDao) {
         this.taskDao = taskDao;
     }
