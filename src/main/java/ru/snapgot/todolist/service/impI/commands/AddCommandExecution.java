@@ -2,17 +2,17 @@ package ru.snapgot.todolist.service.impI.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.snapgot.todolist.service.CommandExecution;
 import ru.snapgot.todolist.service.ErrorHandler;
 import ru.snapgot.todolist.service.TaskManager;
 import ru.snapgot.todolist.parser.CommandDescription;
 
-import java.util.function.Consumer;
-
 @Component
-public class AddCommand extends CommandBase implements Consumer<CommandDescription> {
+public class AddCommandExecution extends CommandBase implements CommandExecution {
+    private final String NAME = "add";
 
     @Autowired
-    public AddCommand(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
+    public AddCommandExecution(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
 
     @Override
     public void accept(CommandDescription commandDescription) {
@@ -22,5 +22,10 @@ public class AddCommand extends CommandBase implements Consumer<CommandDescripti
             return;
         }
         taskManager.add(task);
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

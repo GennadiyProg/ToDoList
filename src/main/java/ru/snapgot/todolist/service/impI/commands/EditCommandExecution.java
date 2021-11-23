@@ -3,16 +3,16 @@ package ru.snapgot.todolist.service.impI.commands;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.snapgot.todolist.service.ErrorHandler;
+import ru.snapgot.todolist.service.CommandExecution;
 import ru.snapgot.todolist.service.TaskManager;
 import ru.snapgot.todolist.parser.CommandDescription;
 
-import java.util.function.Consumer;
-
 @Component
-public class EditCommand extends CommandBase implements Consumer<CommandDescription> {
+public class EditCommandExecution extends CommandBase implements CommandExecution {
+    private final String NAME = "edit";
 
     @Autowired
-    public EditCommand(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
+    public EditCommandExecution(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
 
     @Override
     public void accept(CommandDescription commandDescription) {
@@ -23,5 +23,10 @@ public class EditCommand extends CommandBase implements Consumer<CommandDescript
             return;
         }
         taskManager.edit(id, description);
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }
