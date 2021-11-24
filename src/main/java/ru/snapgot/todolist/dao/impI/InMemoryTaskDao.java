@@ -1,11 +1,13 @@
-package ru.snapgot.todolist.logic.impI;
+package ru.snapgot.todolist.dao.impI;
 
-import ru.snapgot.todolist.logic.TaskDao;
+import org.springframework.stereotype.Component;
+import ru.snapgot.todolist.dao.TaskDao;
 import ru.snapgot.todolist.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class InMemoryTaskDao implements TaskDao {
     private final ArrayList<Task> tasks = new ArrayList<>();
 

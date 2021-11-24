@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.logic;
+package ru.snapgot.todolist.service;
 
 public interface ErrorHandler {
     void handler(String message);

@@ -1,21 +1,23 @@
 package ru.snapgot.todolist.parser;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class ProcessingInput {
+@Component
+public class ProcessingInput implements Function<String, CommandDescription> {
     private static final Pattern COMMAND_PATTERN =
             Pattern.compile("\\s*(?<cmd>\\w+)(?:\\s+(?<args>(?:(?<id>\\d+)\\b)?(?<text>.*)))?");
 
-
-    public CommandDescription processingInput(String command){
+    @Override
+    public CommandDescription apply(String command) {
         log.debug("Пользователь ввел: '{}'", command);
         Matcher matcher = COMMAND_PATTERN.matcher(command);
         if (matcher.find()) {
-            CommandDescription commandDescription;
             CommandDescription.CommandDescriptionBuilder builder = CommandDescription.builder()
                     .name(matcher.group("cmd"))
                     .args(matcher.group("args"))
@@ -28,10 +30,7 @@ public class ProcessingInput {
                     log.error("Не удается считать число: {}", taskId, ex);
                 }
             }
-            commandDescription = builder.build();
-            return commandDescription;
-        } else {
-            System.out.println("Отсутствует команда");
+            return builder.build();
         }
         return null;
     }

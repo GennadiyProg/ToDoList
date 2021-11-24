@@ -1,16 +1,21 @@
-package ru.snapgot.todolist.logic.impI.commands;
+package ru.snapgot.todolist.service.impI.commands;
 
-import ru.snapgot.todolist.logic.ErrorHandler;
-import ru.snapgot.todolist.logic.TaskManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.snapgot.todolist.service.CommandExecution;
+import ru.snapgot.todolist.service.ErrorHandler;
+import ru.snapgot.todolist.service.TaskManager;
 import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.parser.CommandDescription;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-public class PrintCommand extends CommandBase implements Consumer<CommandDescription> {
+@Component
+public class PrintCommandExecution extends CommandBase implements CommandExecution {
+    private final String NAME = "print";
 
-    public PrintCommand(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
+    @Autowired
+    public PrintCommandExecution(TaskManager taskManager, ErrorHandler errorHandler){super(taskManager, errorHandler);}
 
     @Override
     public void accept(CommandDescription commandDescription) {
@@ -30,5 +35,10 @@ public class PrintCommand extends CommandBase implements Consumer<CommandDescrip
             PrintTasks printTasks = new PrintTasks();
             printTasks.accept(tasks);
         }
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

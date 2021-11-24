@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.logic.impI.commands;
+package ru.snapgot.todolist.service.impI.commands;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.snapgot.todolist.model.Task;
