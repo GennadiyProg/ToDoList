@@ -2,17 +2,21 @@ package ru.snapgot.todolist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.service.TaskManager;
 import ru.snapgot.todolist.service.impI.CommandDescription;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
+@Validated
 @RestController
-@RequestMapping("/todolist")
+@RequestMapping("/tasks")
 public class ToDoListController{
     private final TaskManager taskManager;
 
@@ -22,13 +26,8 @@ public class ToDoListController{
     }
 
     @PostMapping
-    public void addTask(@RequestBody CommandDescription commandDescription){
-        String task = commandDescription.getText();
-        if (task == null){
-            log.error("add: Не было ввода задачи");
-            return;
-        }
-        taskManager.add(task);
+    public void addTask(@RequestBody  @Valid CommandDescription commandDescription){
+        taskManager.add(commandDescription.getText());
     }
 
     @PutMapping("/delete/{id}")
@@ -37,24 +36,22 @@ public class ToDoListController{
     }
 
     @PatchMapping("/edit/{id}")
-    public void editTask(@RequestBody CommandDescription commandDescription, @PathVariable @Min(1) int id){
+    public void editTask(@RequestBody @Valid CommandDescription commandDescription, @PathVariable @Min(1) int id){
         taskManager.edit(id, commandDescription.getText());
     }
 
-    @GetMapping(value = {"/{command}"})
-    public List<Task> getTasks(@PathVariable String command, @RequestBody CommandDescription commandDescription){
-        List<Task> tasks;
-        String arg = commandDescription.getText();
-        if (command.equals("print")){
-            if (arg.equals("all")){
-                tasks = taskManager.getAllTasks();
-            } else {
-                tasks = taskManager.getUncompletedTasks();
-            }
+    @GetMapping(value = {"/print", "/print/{arg}"})
+    public List<Task> printTasks(@PathVariable Optional<String> arg){
+        if (arg.isPresent()){
+            return taskManager.getAllTasks();
         } else {
-            tasks = taskManager.getFilteredTasks(arg);
+            return taskManager.getUncompletedTasks();
         }
-        return tasks;
+    }
+
+    @GetMapping(value = {"/search"})
+    public List<Task> searchTasks(@RequestBody @Valid CommandDescription commandDescription){
+        return taskManager.getFilteredTasks(commandDescription.getText());
     }
 
     @PatchMapping("/toggle/{id}")
