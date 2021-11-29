@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.service.impI.commands;
+package ru.snapgot.todolist.service.impI;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.snapgot.todolist.model.Task;
@@ -15,7 +15,8 @@ public class PrintTasks implements Consumer<List<Task>> {
         tasks.forEach(task -> {
             StringBuilder message = new StringBuilder();
             message.append(task.getId()).append(".")
-                    .append(task.isCompleted() ?  " [X] " : " [ ] ").append(task.getDescription());
+                    .append(task.isCompleted() ?  " [X] " : " [ ] ")
+                    .append(task.getDescription());
             stringBuilder.append(message).append("\n");
         });
         System.out.print(stringBuilder);
