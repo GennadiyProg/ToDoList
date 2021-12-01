@@ -11,12 +11,11 @@ import ru.snapgot.todolist.service.impI.CommandDescription;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/tasks/")
 public class ToDoListController{
     private final TaskManager taskManager;
 
@@ -26,35 +25,27 @@ public class ToDoListController{
     }
 
     @PostMapping
-    public void addTask(@RequestBody  @Valid CommandDescription commandDescription){
+    public void addTask(@RequestBody @Valid CommandDescription commandDescription){
         taskManager.add(commandDescription.getText());
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public void deleteTask(@PathVariable() @Min(1) int id){
         taskManager.delete(id);
     }
 
-    @PatchMapping("/edit/{id}")
+    @PatchMapping("{id}/modification")
     public void editTask(@RequestBody @Valid CommandDescription commandDescription, @PathVariable @Min(1) int id){
         taskManager.edit(id, commandDescription.getText());
     }
 
-    @GetMapping(value = {"/print", "/print/{arg}"})
-    public List<Task> printTasks(@PathVariable Optional<String> arg){
-        if (arg.isPresent()){
-            return taskManager.getAllTasks();
-        } else {
-            return taskManager.getUncompletedTasks();
-        }
+    @GetMapping
+    public List<Task> getTasks(@RequestParam(name = "isAll") boolean isAll,
+                               @RequestBody CommandDescription commandDescription){
+        return taskManager.getTasks(isAll, commandDescription.getText());
     }
 
-    @GetMapping(value = {"/search"})
-    public List<Task> searchTasks(@RequestBody @Valid CommandDescription commandDescription){
-        return taskManager.getFilteredTasks(commandDescription.getText());
-    }
-
-    @PatchMapping("/toggle/{id}")
+    @PatchMapping("{id}/completed")
     public void toggleTask(@PathVariable @Min(1) int id){
         taskManager.toggle(id);
     }

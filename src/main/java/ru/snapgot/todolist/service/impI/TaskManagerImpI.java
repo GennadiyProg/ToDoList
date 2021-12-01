@@ -24,18 +24,19 @@ public class TaskManagerImpI implements TaskManager {
     }
 
     @Override
-    public List<Task> getAllTasks(){
-        return taskDao.getAllTasks();
-    }
-
-    @Override
-    public List<Task> getUncompletedTasks(){
-        return taskDao.getUncompletedTasks();
-    }
-
-    @Override
-    public List<Task> getFilteredTasks(String description){
-        return taskDao.getFilteredTasks(description);
+    public List<Task> getTasks(boolean isAll, String searchFilter){
+        List<Task> tasks;
+        if (searchFilter != null){
+            tasks = taskDao.getFilteredTasks(searchFilter);
+        } else {
+            tasks = taskDao.getAllTasks();
+        }
+        if (isAll){
+            return tasks;
+        } else {
+            return tasks.stream()
+                    .filter(task -> !task.isCompleted()).toList();
+        }
     }
 
     @Override
