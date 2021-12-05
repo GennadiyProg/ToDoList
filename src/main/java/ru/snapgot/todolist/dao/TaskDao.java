@@ -2,14 +2,12 @@ package ru.snapgot.todolist.dao;
 
 import ru.snapgot.todolist.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskDao {
-    void addTask(Task task);
-    ArrayList<Task> getAllTasks();
-    List<Task> getUncompletedTasks();
-    List<Task> getFilteredTasks(String description);
-    Task getTaskById(int id);
-    void deleteTask(int id);
+    void add(String task);
+    List<Task> getTasks(boolean isAll, String searchFilter);
+    void toggle(int id);
+    void delete(int id);
+    void edit(int id, String newTask);
 }
