@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.snapgot.todolist.model.Task;
-import ru.snapgot.todolist.dao.TaskDao;
 import ru.snapgot.todolist.model.CommandDescription;
+import ru.snapgot.todolist.repos.TaskRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -18,40 +18,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks/")
 public class ToDoListController{
-    private final TaskDao taskDao;
+    private final TaskRepo taskRepo;
 
     @Autowired
-    public ToDoListController(TaskDao taskDao) {
-        this.taskDao = taskDao;
+    public ToDoListController(TaskRepo taskRepo) {
+        this.taskRepo = taskRepo;
     }
 
     @PostMapping
     public void addTask(@RequestBody @Valid CommandDescription commandDescription){
-        taskDao.add(commandDescription.getText());
+        taskRepo.save(new Task(commandDescription.getText(), false));
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable() @Min(1) int id){
-        taskDao.delete(id);
+        taskRepo.deleteById(id);
     }
 
     @PatchMapping("{id}/modification")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void editTask(@RequestParam(value = "newDescription") String newDescription,
                                            @PathVariable @Min(1) int id){
-        taskDao.edit(id, newDescription);
+        taskRepo.editTask(id, newDescription);
     }
 
     @GetMapping
     public List<Task> getTasks(@RequestParam(name = "isAll") boolean isAll,
                                @RequestParam(name= "search", required = false, defaultValue = "") String search){
-        return taskDao.getTasks(isAll, search);
+        return taskRepo.getFilteredTask(isAll, search);
     }
 
     @PatchMapping("{id}/completed")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleTask(@PathVariable @Min(1) int id){
-        taskDao.toggle(id);
+        taskRepo.toggleTask(id);
     }
 }
