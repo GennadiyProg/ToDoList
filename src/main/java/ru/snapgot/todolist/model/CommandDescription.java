@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.service.impI;
+package ru.snapgot.todolist.model;
 
 import lombok.Getter;
 

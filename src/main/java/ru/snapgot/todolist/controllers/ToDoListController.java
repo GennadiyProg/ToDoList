@@ -2,11 +2,12 @@ package ru.snapgot.todolist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.snapgot.todolist.model.Task;
-import ru.snapgot.todolist.service.TaskManager;
-import ru.snapgot.todolist.service.impI.CommandDescription;
+import ru.snapgot.todolist.model.CommandDescription;
+import ru.snapgot.todolist.repos.TaskRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -17,36 +18,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks/")
 public class ToDoListController{
-    private final TaskManager taskManager;
+    private final TaskRepo taskRepo;
 
     @Autowired
-    public ToDoListController(TaskManager taskManager) {
-        this.taskManager = taskManager;
+    public ToDoListController(TaskRepo taskRepo) {
+        this.taskRepo = taskRepo;
     }
 
     @PostMapping
     public void addTask(@RequestBody @Valid CommandDescription commandDescription){
-        taskManager.add(commandDescription.getText());
+        taskRepo.save(new Task(commandDescription.getText(), false));
     }
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable() @Min(1) int id){
-        taskManager.delete(id);
+        taskRepo.deleteById(id);
     }
 
     @PatchMapping("{id}/modification")
-    public void editTask(@RequestBody @Valid CommandDescription commandDescription, @PathVariable @Min(1) int id){
-        taskManager.edit(id, commandDescription.getText());
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void editTask(@RequestParam(value = "newDescription") String newDescription,
+                                           @PathVariable @Min(1) int id){
+        taskRepo.editTask(id, newDescription);
     }
 
     @GetMapping
     public List<Task> getTasks(@RequestParam(name = "isAll") boolean isAll,
-                               @RequestBody CommandDescription commandDescription){
-        return taskManager.getTasks(isAll, commandDescription.getText());
+                               @RequestParam(name= "search", required = false, defaultValue = "") String search){
+        return taskRepo.getFilteredTask(isAll, search);
     }
 
     @PatchMapping("{id}/completed")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleTask(@PathVariable @Min(1) int id){
-        taskManager.toggle(id);
+        taskRepo.toggleTask(id);
     }
 }
