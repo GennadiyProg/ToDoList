@@ -5,7 +5,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
-public class CommandDescription {
+public class CommandDescriptionDto {
     @NotEmpty
     private String text;
 }
