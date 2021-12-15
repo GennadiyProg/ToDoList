@@ -27,10 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .mvcMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                    .mvcMatchers("/customer/**").hasRole(Role.CUSTOMER.name())
-                    .mvcMatchers("/**").permitAll()
-                    .anyRequest().authenticated()
+                .mvcMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                .mvcMatchers("/customer/**").hasRole(Role.CUSTOMER.name())
+                .mvcMatchers("/login").permitAll()
+                .mvcMatchers("/**").authenticated()
+                .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().logout()
                 .and().csrf().disable();

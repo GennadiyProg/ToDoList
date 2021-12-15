@@ -18,12 +18,12 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/customer/tasks/")
-public class CustomerController {
+public class TaskController {
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
 
     @Autowired
-    public CustomerController(TaskRepo taskRepo, UserRepo userRepo) {
+    public TaskController(TaskRepo taskRepo, UserRepo userRepo) {
         this.taskRepo = taskRepo;
         this.userRepo = userRepo;
     }
