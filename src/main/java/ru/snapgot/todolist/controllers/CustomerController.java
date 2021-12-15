@@ -35,15 +35,17 @@ public class CustomerController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable() @Min(1) long id){
-        taskRepo.deleteById(id);
+    public void deleteTask(@PathVariable() @Min(1) long id,
+                           Principal principal){
+        taskRepo.deleteTask(id, userRepo.findByUsername(principal.getName()));
     }
 
     @PatchMapping("{id}/modification")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void editTask(@RequestParam(value = "newDescription") String newDescription,
-                                           @PathVariable @Min(1) long id){
-        taskRepo.editTask(id, newDescription);
+                                           @PathVariable @Min(1) long id,
+                         Principal principal){
+        taskRepo.editTask(id, newDescription, userRepo.findByUsername(principal.getName()));
     }
 
     @GetMapping
@@ -55,7 +57,8 @@ public class CustomerController {
 
     @PatchMapping("{id}/completed")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void toggleTask(@PathVariable @Min(1) long id){
-        taskRepo.toggleTask(id);
+    public void toggleTask(@PathVariable @Min(1) long id,
+                           Principal principal){
+        taskRepo.toggleTask(id, userRepo.findByUsername(principal.getName()));
     }
 }

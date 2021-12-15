@@ -8,7 +8,7 @@ import ru.snapgot.todolist.repos.UserRepo;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/")
 public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;

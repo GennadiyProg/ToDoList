@@ -18,12 +18,16 @@ import java.util.List;
 public interface TaskRepo extends JpaRepository<Task, Long> {
 
     @Modifying
-    @Query("UPDATE Task t SET t.completed = (case t.completed when false then true else false end) WHERE t.id = ?1")
-    void toggleTask(long id);
+    @Query("DELETE FROM Task t WHERE t.id = :taskId AND t.user = :user")
+    void deleteTask(@Param("taskId") long id,@Param("user") User user);
 
     @Modifying
-    @Query(value = "UPDATE Task t SET t.description = ?2 WHERE t.id = ?1")
-    void editTask(long id, String text);
+    @Query("UPDATE Task t SET t.completed = (case t.completed when false then true else false end) WHERE t.id = :taskId AND t.user = :user")
+    void toggleTask(@Param("taskId") long id,@Param("user") User user);
+
+    @Modifying
+    @Query(value = "UPDATE Task t SET t.description = :description WHERE t.id = :taskId AND t.user = :user")
+    void editTask(@Param("taskId") long id,@Param("description") String text,@Param("user") User user);
 
     @Query(value = "SELECT t.id AS id, t.description AS description, t.completed AS completed FROM Task t WHERE (:isAll = true OR t.completed = :isAll) AND " +
             "((:subString = '') OR t.description LIKE %:subString%) AND t.user = :user")
