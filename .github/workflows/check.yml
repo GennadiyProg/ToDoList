@@ -15,7 +15,7 @@ jobs:
           java-version: 1.11
 
       - name: Run Coverage
-        run: mvn clean verify
+        run: mvn -B package
 
       - name: Generate JaCoCo badge
         id: jacoco
