@@ -15,7 +15,7 @@ jobs:
           java-version: 1.11
 
       - name: Run Coverage
-        run: mvn -B package
+        run: mvn -B package --file pom.xml
 
       - name: Generate JaCoCo badge
         id: jacoco
