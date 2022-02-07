@@ -29,8 +29,10 @@ public class TaskController {
     }
 
     @PostMapping
-    public void addTask(@RequestBody @Valid CommandDescriptionDto commandDescriptionDto, Principal principal){
-        taskRepo.save(new Task(commandDescriptionDto.getText(), false, userRepo.findByUsername(principal.getName())));
+    public Task addTask(@RequestBody @Valid CommandDescriptionDto commandDescriptionDto, Principal principal){
+        Task task = new Task(commandDescriptionDto.getText(), false, userRepo.findByUsername(principal.getName()));
+        taskRepo.save(task);
+        return task;
     }
 
     @DeleteMapping("{id}")
