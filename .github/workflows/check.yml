@@ -18,3 +18,5 @@ jobs:
 
       - name: Build maven
         run: mvn -B package --file pom.xml
+        env:
+          PG_HOST: ${{secrets.DB_HOST}}
