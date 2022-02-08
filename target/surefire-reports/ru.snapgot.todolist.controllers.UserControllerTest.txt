@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: ru.snapgot.todolist.controllers.UserControllerTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.336 s - in ru.snapgot.todolist.controllers.UserControllerTest
