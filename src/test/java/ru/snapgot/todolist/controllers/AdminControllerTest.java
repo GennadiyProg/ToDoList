@@ -13,7 +13,6 @@ import ru.snapgot.todolist.model.Role;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class AdminControllerTest {
     @MockBean

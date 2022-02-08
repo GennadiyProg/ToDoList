@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class UserControllerTest {
     @MockBean
