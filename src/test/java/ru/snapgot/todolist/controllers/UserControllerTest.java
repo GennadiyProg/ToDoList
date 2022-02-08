@@ -1,24 +1,26 @@
 package ru.snapgot.todolist.controllers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
 
-@SpringBootTest
 class UserControllerTest {
-    @MockBean
+    @Mock
     User user;
     @Mock
     UserRepo userRepo;
-    @MockBean
+    @Mock
     PasswordEncoder encoder;
+
+    @BeforeEach
+    public void openMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void createUser_isCalledUserRepo_Once() {

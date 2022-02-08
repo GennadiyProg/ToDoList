@@ -1,24 +1,27 @@
 package ru.snapgot.todolist.controllers;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.snapgot.todolist.model.NewCustomerDto;
 import ru.snapgot.todolist.model.Role;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
 
-@SpringBootTest
 class AdminControllerTest {
-    @MockBean
+    @Mock
     PasswordEncoder encoder;
-    @MockBean
+    @Mock
     UserRepo userRepo;
+
+    @BeforeEach
+    public void openMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void createCustomer_isCreatedCustomer_True(){
