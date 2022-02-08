@@ -1,4 +1,4 @@
-[![Tests](.github/badges/jacoco.svg)](https://github.com/Madrapps/jacoco-report/actions/workflows/check.yml)
+[![Tests coverage](.github/badges/jacoco.svg)])
 
 <h1>To Do List</h1>
 Настройка уровна журналирования (все изменения производятся в resources/variables.properties с переменной logging_level):
