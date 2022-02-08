@@ -23,6 +23,7 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-branches-badge: true
+          jacoco-csv-file: target/jacoco-report/jacoco.csv
 
       - name: Commit and push the coverage badges and summary file
         if: ${{ github.event_name != 'pull_request' }}
