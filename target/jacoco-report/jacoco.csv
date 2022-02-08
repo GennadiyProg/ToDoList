@@ -1,0 +1,11 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+ToDoList,ru.snapgot.todolist.config,SecurityConfig,81,0,0,0,20,0,4,0,4,0
+ToDoList,ru.snapgot.todolist.model,Task,213,0,28,0,18,0,30,0,16,0
+ToDoList,ru.snapgot.todolist.model,NewCustomerDto,106,9,22,0,0,3,17,3,6,3
+ToDoList,ru.snapgot.todolist.model,CommandDescriptionDto,6,0,0,0,2,0,2,0,2,0
+ToDoList,ru.snapgot.todolist.model,Role,0,24,0,0,0,3,0,1,0,1
+ToDoList,ru.snapgot.todolist.model,User,123,84,27,11,2,10,26,7,7,7
+ToDoList,ru.snapgot.todolist.controllers,TaskController,70,0,0,0,14,0,6,0,6,0
+ToDoList,ru.snapgot.todolist.controllers,UserController,6,22,0,0,2,7,1,2,1,2
+ToDoList,ru.snapgot.todolist.controllers,AdminController,0,37,0,0,0,10,0,4,0,4
+ToDoList,ru.snapgot.todolist.service,UserDetailsServiceImpl,52,0,2,0,10,0,4,0,3,0

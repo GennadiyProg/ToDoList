@@ -1,0 +1,14 @@
+ru/snapgot/todolist/repos/UserRepo.class
+ru/snapgot/todolist/model/TaskDto.class
+ru/snapgot/todolist/controllers/AdminController.class
+ru/snapgot/todolist/repos/TaskRepo.class
+ru/snapgot/todolist/model/Task.class
+ru/snapgot/todolist/model/User.class
+ru/snapgot/todolist/controllers/TaskController.class
+ru/snapgot/todolist/service/UserDetailsServiceImpl.class
+ru/snapgot/todolist/config/SecurityConfig.class
+ru/snapgot/todolist/ToDoList.class
+ru/snapgot/todolist/model/Role.class
+ru/snapgot/todolist/model/NewCustomerDto.class
+ru/snapgot/todolist/model/CommandDescriptionDto.class
+ru/snapgot/todolist/controllers/UserController.class

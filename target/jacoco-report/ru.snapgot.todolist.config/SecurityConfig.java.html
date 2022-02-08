@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ToDoList</a> &gt; <a href="index.source.html" class="el_package">ru.snapgot.todolist.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package ru.snapgot.todolist.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.snapgot.todolist.model.Role;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+<span class="nc" id="L22">    public SecurityConfig(UserDetailsService userDetailsService) {</span>
+<span class="nc" id="L23">        this.userDetailsService = userDetailsService;</span>
+<span class="nc" id="L24">    }</span>
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+<span class="nc" id="L28">        http</span>
+<span class="nc" id="L29">                .authorizeRequests()</span>
+<span class="nc" id="L30">                .mvcMatchers(&quot;/admin/**&quot;).hasRole(Role.ADMIN.name())</span>
+<span class="nc" id="L31">                .mvcMatchers(&quot;/customer/**&quot;).hasRole(Role.CUSTOMER.name())</span>
+<span class="nc" id="L32">                .mvcMatchers(&quot;/login&quot;).permitAll()</span>
+<span class="nc" id="L33">                .mvcMatchers(&quot;/**&quot;).authenticated()</span>
+<span class="nc" id="L34">                .anyRequest().authenticated()</span>
+<span class="nc" id="L35">                .and().httpBasic()</span>
+<span class="nc" id="L36">                .and().logout()</span>
+<span class="nc" id="L37">                .and().csrf().disable();</span>
+<span class="nc" id="L38">    }</span>
+
+    @Bean
+    protected PasswordEncoder passwordEncoder(){
+<span class="nc" id="L42">        return new BCryptPasswordEncoder(12);</span>
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+<span class="nc" id="L47">        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();</span>
+<span class="nc" id="L48">        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());</span>
+<span class="nc" id="L49">        daoAuthenticationProvider.setUserDetailsService(userDetailsService);</span>
+<span class="nc" id="L50">        auth.authenticationProvider(daoAuthenticationProvider);</span>
+<span class="nc" id="L51">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

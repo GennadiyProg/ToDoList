@@ -1,0 +1,14 @@
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/ToDoList.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/controllers/UserController.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/config/SecurityConfig.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/Role.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/User.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/service/UserDetailsServiceImpl.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/CommandDescriptionDto.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/NewCustomerDto.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/controllers/AdminController.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/TaskDto.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/repos/TaskRepo.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/repos/UserRepo.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/model/Task.java
+/home/runner/work/ToDoList/ToDoList/src/main/java/ru/snapgot/todolist/controllers/TaskController.java
