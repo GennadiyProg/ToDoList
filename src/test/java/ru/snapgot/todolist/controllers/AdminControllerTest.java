@@ -1,10 +1,9 @@
 package ru.snapgot.todolist.controllers;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.snapgot.todolist.model.NewCustomerDto;
@@ -12,15 +11,24 @@ import ru.snapgot.todolist.model.Role;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 class AdminControllerTest {
     @Mock
     PasswordEncoder encoder;
     @Mock
     UserRepo userRepo;
+    private AutoCloseable closeable;
 
     @BeforeEach
     public void openMocks() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @After
+    public void releaseMocks() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -31,7 +39,7 @@ class AdminControllerTest {
 
         User newUser = adminController.createCustomer(newCustomerDto);
 
-        Assertions.assertEquals(user, newUser);
+        assertEquals(user, newUser);
     }
 
     @Test
@@ -42,7 +50,7 @@ class AdminControllerTest {
 
         adminController.createCustomer(newCustomerDto);
 
-        Mockito.verify(userRepo, Mockito.times(1)).save(user);
+        verify(userRepo, times(1)).save(user);
     }
 
     @Test
@@ -51,7 +59,7 @@ class AdminControllerTest {
 
         adminController.getAllCustomers();
 
-        Mockito.verify(userRepo, Mockito.times(1)).findAll();
+        verify(userRepo, times(1)).findAll();
     }
 
     @Test
@@ -61,6 +69,6 @@ class AdminControllerTest {
 
         adminController.deleteUser(username);
 
-        Mockito.verify(userRepo, Mockito.times(1)).deleteByUsername(username);
+        verify(userRepo, times(1)).deleteByUsername(username);
     }
 }

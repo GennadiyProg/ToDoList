@@ -1,13 +1,15 @@
 package ru.snapgot.todolist.controllers;
 
+import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
+
+import static org.mockito.Mockito.*;
 
 class UserControllerTest {
     @Mock
@@ -16,10 +18,16 @@ class UserControllerTest {
     UserRepo userRepo;
     @Mock
     PasswordEncoder encoder;
+    private AutoCloseable closeable;
 
     @BeforeEach
     public void openMocks() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @After
+    public void releaseMocks() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -27,6 +35,6 @@ class UserControllerTest {
         UserController controller = new UserController(encoder, userRepo);
         user.setPassword("hello");
         controller.createUser(user);
-        Mockito.verify(userRepo, Mockito.times(1)).save(user);
+        verify(userRepo, times(1)).save(user);
     }
 }
