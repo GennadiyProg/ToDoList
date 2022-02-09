@@ -39,7 +39,8 @@ class AdminControllerTest {
 
         User newUser = adminController.createCustomer(newCustomerDto);
 
-        assertEquals(user, newUser);
+        assertEquals(user.getUsername(), newUser.getUsername());
+        assertEquals(user.getPassword(), newUser.getPassword());
     }
 
     @Test
