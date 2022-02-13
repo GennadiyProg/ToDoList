@@ -1,5 +1,4 @@
-[![Tests coverage](.github/badges/jacoco.svg)](https://github.com/GennadiyProg/ToDoList/actions/workflows/check.yml)
-
+[![codecov]()](https://codecov.io/gh/GennadiyProg/ToDoList/)
 <h1>To Do List</h1>
 Настройка уровна журналирования (все изменения производятся в resources/variables.properties с переменной logging_level):
 <br>Отключение логирования: off
