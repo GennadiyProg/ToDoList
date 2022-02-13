@@ -24,8 +24,13 @@ public class AdminController {
 
     @PostMapping
     public User createCustomer(@RequestBody NewCustomerDto newCustomerDto){
-        User user = new User(newCustomerDto.getUsername(), passwordEncoder.encode(newCustomerDto.getPassword()), Role.CUSTOMER);
+        User user = new User(
+                newCustomerDto.getUsername(),
+                passwordEncoder.encode(newCustomerDto.getPassword()),
+                Role.CUSTOMER
+        );
         userRepo.save(user);
+        user.setPassword("*****");
         return user;
     }
 

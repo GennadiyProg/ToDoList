@@ -1,10 +1,11 @@
 package ru.snapgot.todolist.controllers;
 
-import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.snapgot.todolist.model.NewCustomerDto;
 import ru.snapgot.todolist.model.Role;
@@ -14,62 +15,51 @@ import ru.snapgot.todolist.repos.UserRepo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class AdminControllerTest {
+    private final static PasswordEncoder encoder = new BCryptPasswordEncoder();
     @Mock
-    PasswordEncoder encoder;
-    @Mock
-    UserRepo userRepo;
-    private AutoCloseable closeable;
+    private UserRepo userRepo;
+    private User user;
+    private AdminController adminController;
 
     @BeforeEach
-    public void openMocks() {
-        closeable = MockitoAnnotations.openMocks(this);
-    }
-
-    @After
-    public void releaseMocks() throws Exception {
-        closeable.close();
+    public void setUp(){
+        user = createUser();
+        adminController = new AdminController(userRepo, encoder);
     }
 
     @Test
-    void createCustomer_isCreatedCustomer_True(){
-        NewCustomerDto newCustomerDto = new NewCustomerDto();
-        User user = new User(newCustomerDto.getUsername(), encoder.encode(newCustomerDto.getPassword()), Role.CUSTOMER);
-        AdminController adminController = new AdminController(userRepo, encoder);
+    public void createCustomer_savedCustomerAndHiddenPasswordWhenReturn_Always(){
+        NewCustomerDto customerDto = new NewCustomerDto();
+        customerDto.setUsername(user.getUsername());
+        customerDto.setPassword(user.getPassword());
 
-        User newUser = adminController.createCustomer(newCustomerDto);
+        User newUser = adminController.createCustomer(customerDto);
 
-        assertEquals(user.getUsername(), newUser.getUsername());
-        assertEquals(user.getPassword(), newUser.getPassword());
+        verify(userRepo).save(any(User.class));
+        assertEquals("*****", newUser.getPassword());
     }
 
     @Test
-    void createCustomer_isCalledUserRepo_Once() {
-        NewCustomerDto newCustomerDto = new NewCustomerDto();
-        User user = new User(newCustomerDto.getUsername(), newCustomerDto.getPassword(), Role.CUSTOMER);
-        AdminController adminController = new AdminController(userRepo, encoder);
-
-        adminController.createCustomer(newCustomerDto);
-
-        verify(userRepo, times(1)).save(user);
-    }
-
-    @Test
-    void getAllCustomers_isCalledUserRepo_Once() {
-        AdminController adminController = new AdminController(userRepo, encoder);
-
+    public void getAllCustomers_calledUserRepo_Once() {
         adminController.getAllCustomers();
 
         verify(userRepo, times(1)).findAll();
     }
 
     @Test
-    void deleteUser_isCalledUserRepo_Once() {
-        String username = "Kate";
-        AdminController adminController = new AdminController(userRepo, encoder);
+    public void deleteUser_calledUserRepo_Once() {
+        adminController.deleteUser(user.getUsername());
 
-        adminController.deleteUser(username);
+        verify(userRepo, times(1)).deleteByUsername(user.getUsername());
+    }
 
-        verify(userRepo, times(1)).deleteByUsername(username);
+    private static User createUser() {
+        User testUser = new User();
+        testUser.setUsername("User");
+        testUser.setPassword("password");
+        testUser.setRole(Role.CUSTOMER);
+        return testUser;
     }
 }
