@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: "3-add-user_id-column-in-task-table"
+      author: gennadiy.rumyantsev
+      changes:
+        - addColumn:
+            tableName: Task
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    referencedTableName: Users
+                    referencedColumnNames: id
+                    foreignKeyName: user_id
+                    deleteCascade: true
