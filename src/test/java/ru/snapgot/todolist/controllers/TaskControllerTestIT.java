@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.snapgot.todolist.model.*;
@@ -20,14 +15,11 @@ import ru.snapgot.todolist.repos.UserRepo;
 
 import javax.validation.ConstraintViolationException;
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -92,7 +84,7 @@ class TaskControllerTestIT {
         controller.deleteTask(3, principal);
 
         assertEquals(0, taskRepo.count());
-        mockMvc.perform(post("/")).andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/1")).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -103,6 +95,6 @@ class TaskControllerTestIT {
         controller.editTask(newDescription, 1, principal);
 
         assertEquals(newDescription, taskRepo.findById(1L).orElse(task).getDescription());
-        mockMvc.perform(post("/")).andExpect(status().isUnauthorized());
+        mockMvc.perform(patch("/1/modification")).andExpect(status().isUnauthorized());
     }
 }
