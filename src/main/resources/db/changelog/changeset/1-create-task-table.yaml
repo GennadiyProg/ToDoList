@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1-create-task-table"
+      author: gennadiy.rumyantsev
+      changes:
+        - createTable:
+            tableName: Task
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: completed
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

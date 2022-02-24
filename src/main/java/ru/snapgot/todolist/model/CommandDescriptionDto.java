@@ -1,10 +1,10 @@
 package ru.snapgot.todolist.model;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 
-@Getter
+@Data
 public class CommandDescriptionDto {
     @NotEmpty
     private String text;
