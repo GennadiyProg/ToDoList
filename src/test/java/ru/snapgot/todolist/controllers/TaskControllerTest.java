@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.snapgot.todolist.model.CommandDescriptionDto;
+import ru.snapgot.todolist.controllers.client.ClientRequests;
+import ru.snapgot.todolist.model.dto.CommandDescriptionDto;
 import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
@@ -22,12 +23,14 @@ class TaskControllerTest {
     private TaskRepo taskRepo;
     @Mock
     private UserRepo userRepo;
+    @Mock
+    private ClientRequests clientRequests;
     TaskController taskController;
     private Principal principal = new UserPrincipal("User");
 
     @BeforeEach
     public void setUp(){
-        taskController = new TaskController(taskRepo, userRepo);
+        taskController = new TaskController(taskRepo, userRepo, clientRequests);
         when(userRepo.findByUsername(principal.getName())).thenReturn(null);
     }
 
@@ -46,11 +49,11 @@ class TaskControllerTest {
 
     @Test
     public void deleteTask_calledTaskRepo_Once() {
-        long id = 1L;
+        String id = "A1";
 
         taskController.deleteTask(id, principal);
 
-        verify(taskRepo).deleteTask(id, null);
+        verify(taskRepo).deleteTask(1, null);
         verifyNoMoreInteractions(taskRepo);
     }
 }

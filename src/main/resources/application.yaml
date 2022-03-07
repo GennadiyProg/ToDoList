@@ -1,0 +1,6 @@
+feign:
+  client:
+    config:
+      default:
+        basicAuthRequestInterceptor:
+          ru.snapgot.todolist.config.FeignConfig.java

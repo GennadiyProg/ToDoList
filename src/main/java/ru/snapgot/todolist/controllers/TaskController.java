@@ -1,32 +1,33 @@
 package ru.snapgot.todolist.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.snapgot.todolist.controllers.client.ClientRequests;
 import ru.snapgot.todolist.model.Task;
-import ru.snapgot.todolist.model.CommandDescriptionDto;
-import ru.snapgot.todolist.model.TaskDto;
+import ru.snapgot.todolist.model.clientdto.enumeration.TaskStatus;
+import ru.snapgot.todolist.model.dto.CommandDescriptionDto;
+import ru.snapgot.todolist.model.dto.DisplayTaskDto;
+import ru.snapgot.todolist.model.dto.TaskDto;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
+@AllArgsConstructor
 @RequestMapping("/customer/tasks/")
 public class TaskController {
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
-
-    @Autowired
-    public TaskController(TaskRepo taskRepo, UserRepo userRepo) {
-        this.taskRepo = taskRepo;
-        this.userRepo = userRepo;
-    }
+    private final ClientRequests clientRequests;
 
     @PostMapping
     public Task addTask(@RequestBody @Valid CommandDescriptionDto commandDescriptionDto, Principal principal){
@@ -37,30 +38,77 @@ public class TaskController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable() @Min(1) long id,
-                           Principal principal){
-        taskRepo.deleteTask(id, userRepo.findByUsername(principal.getName()));
+    public void deleteTask(@PathVariable() String id, Principal principal){
+        switch (id.charAt(0)){
+            case 'A':
+                taskRepo.deleteTask(Long.parseLong(id.substring(1)), userRepo.findByUsername(principal.getName()));
+                break;
+            case 'B':
+                clientRequests.deleteTask(Long.parseLong(id.substring(1)));
+                break;
+        }
     }
 
     @PatchMapping("{id}/modification")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void editTask(@RequestParam(value = "newDescription") String newDescription,
-                                           @PathVariable @Min(1) long id,
+                         @PathVariable String id,
                          Principal principal){
-        taskRepo.editTask(id, newDescription, userRepo.findByUsername(principal.getName()));
+        switch (id.charAt(0)){
+            case 'A':
+                taskRepo.editTask(Long.parseLong(id.substring(1)), newDescription, userRepo.findByUsername(principal.getName()));
+                break;
+            case 'B':
+                clientRequests.editTask(Long.parseLong(id.substring(1)), newDescription);
+                break;
+        }
+
     }
 
     @GetMapping
-    public List<TaskDto> getTasks(@RequestParam(name = "isAll") boolean isAll,
-                                  @RequestParam(name= "search", required = false, defaultValue = "") String search,
-                                  Principal principal){
-        return taskRepo.getFilteredTask(isAll, search, userRepo.findByUsername(principal.getName()));
+    public List<DisplayTaskDto> getTasks(@RequestParam(name = "isAll") boolean isAll,
+                                         @RequestParam(name= "search", required = false, defaultValue = "") String search,
+                                         Principal principal){
+        List<DisplayTaskDto> listTasks = new ArrayList<>();
+        taskRepo.getFilteredTask(isAll, search, userRepo.findByUsername(principal.getName()))
+                .forEach(task -> listTasks.add(
+                        new DisplayTaskDto("A" + task.getId(), task.getDescription(), task.getCompleted())
+                ));
+        if (search.equals("")){
+            if (isAll){
+                clientRequests.getList("ALL")
+                        .forEach(task -> listTasks.add(
+                                new DisplayTaskDto(
+                                        "B" + task.getId(),
+                                        task.getDescription(),
+                                        task.getTaskStatus() == TaskStatus.COMPLETED)));
+            } else {
+                clientRequests.getList("CREATED")
+                        .forEach(task -> listTasks.add(
+                                new DisplayTaskDto(
+                                        "B" + task.getId(),
+                                        task.getDescription(),
+                                        false)));
+            }
+            return listTasks;
+        } else {
+            return listTasks;
+        }
+
     }
 
     @PatchMapping("{id}/completed")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void toggleTask(@PathVariable @Min(1) long id,
+    public void toggleTask(@PathVariable String id,
                            Principal principal){
-        taskRepo.toggleTask(id, userRepo.findByUsername(principal.getName()));
+        switch (id.charAt(0)){
+            case 'A':
+                taskRepo.toggleTask(Long.parseLong(id.substring(1)), userRepo.findByUsername(principal.getName()));
+                break;
+            case 'B':
+                clientRequests.toggleTask(Long.parseLong(id.substring(1)));
+                break;
+        }
+
     }
 }

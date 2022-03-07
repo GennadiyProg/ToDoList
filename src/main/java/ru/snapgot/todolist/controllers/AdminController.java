@@ -3,7 +3,7 @@ package ru.snapgot.todolist.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ru.snapgot.todolist.model.NewCustomerDto;
+import ru.snapgot.todolist.model.dto.NewCustomerDto;
 import ru.snapgot.todolist.model.Role;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
