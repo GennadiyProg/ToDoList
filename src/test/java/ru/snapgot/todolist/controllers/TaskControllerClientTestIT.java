@@ -59,11 +59,12 @@ public class TaskControllerClientTestIT {
     }
 
     @Test
-    public void getTasks(WireMockRuntimeInfo wireMockRuntimeInfo){
+    public void getTasks_ReturnRightTasksList_Always(WireMockRuntimeInfo wireMockRuntimeInfo){
         WireMock wireMock = wireMockRuntimeInfo.getWireMock();
         wireMock.register(get("/tasks?printMod=ALL").willReturn(
                 okJson("[{\"id\":3, \"description\":\"random task\", \"taskStatus\":\"CREATED\"}]"))
         );
+
         List<TaskDto> tasks = new ArrayList<>();
         tasks.add(new TaskDto() {
             @Override
@@ -83,6 +84,7 @@ public class TaskControllerClientTestIT {
         });
         Mockito.when(taskRepo.getFilteredTask(true, "", userRepo.findByUsername(principal.getName())))
                 .thenReturn(tasks);
+
         List<DisplayTaskDto> expectingTasks = new ArrayList<>();
         expectingTasks.add(new DisplayTaskDto("A3", "description", true));
         expectingTasks.add(new DisplayTaskDto("B3", "random task", false));

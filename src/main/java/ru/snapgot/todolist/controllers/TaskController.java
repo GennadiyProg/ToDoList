@@ -9,16 +9,13 @@ import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.model.clientdto.enumeration.TaskStatus;
 import ru.snapgot.todolist.model.dto.CommandDescriptionDto;
 import ru.snapgot.todolist.model.dto.DisplayTaskDto;
-import ru.snapgot.todolist.model.dto.TaskDto;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -69,32 +66,38 @@ public class TaskController {
     public List<DisplayTaskDto> getTasks(@RequestParam(name = "isAll") boolean isAll,
                                          @RequestParam(name= "search", required = false, defaultValue = "") String search,
                                          Principal principal){
+        StringBuilder sb = new StringBuilder();
         List<DisplayTaskDto> listTasks = new ArrayList<>();
         taskRepo.getFilteredTask(isAll, search, userRepo.findByUsername(principal.getName()))
                 .forEach(task -> listTasks.add(
-                        new DisplayTaskDto("A" + task.getId(), task.getDescription(), task.getCompleted())
-                ));
+                            new DisplayTaskDto(
+                                    sb.delete(0, sb.length()).append("A").append(task.getId()).toString(),
+                                    task.getDescription(),
+                                    task.getCompleted())
+                    )
+                );
         if (search.equals("")){
             if (isAll){
                 clientRequests.getList("ALL")
                         .forEach(task -> listTasks.add(
                                 new DisplayTaskDto(
-                                        "B" + task.getId(),
+                                        sb.delete(0, sb.length()).append("B").append(task.getId()).toString(),
                                         task.getDescription(),
-                                        task.getTaskStatus() == TaskStatus.COMPLETED)));
+                                        task.getTaskStatus() == TaskStatus.COMPLETED)
+                                )
+                        );
             } else {
                 clientRequests.getList("CREATED")
                         .forEach(task -> listTasks.add(
                                 new DisplayTaskDto(
-                                        "B" + task.getId(),
+                                        sb.delete(0, sb.length()).append("B").append(task.getId()).toString(),
                                         task.getDescription(),
-                                        false)));
+                                        false)
+                                )
+                        );
             }
-            return listTasks;
-        } else {
-            return listTasks;
         }
-
+        return listTasks;
     }
 
     @PatchMapping("{id}/completed")
