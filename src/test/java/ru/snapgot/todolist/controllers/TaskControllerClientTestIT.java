@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -82,7 +84,7 @@ public class TaskControllerClientTestIT {
                 return true;
             }
         });
-        Mockito.when(taskRepo.getFilteredTask(true, "", userRepo.findByUsername(principal.getName())))
+        when(taskRepo.getFilteredTask(true, "", userRepo.findByUsername(principal.getName())))
                 .thenReturn(tasks);
 
         List<DisplayTaskDto> expectingTasks = new ArrayList<>();
@@ -91,12 +93,12 @@ public class TaskControllerClientTestIT {
 
         List<DisplayTaskDto> resultingTasks = taskController.getTasks(true, "", principal);
 
-        Assertions.assertEquals(expectingTasks.get(0).getId(), resultingTasks.get(0).getId());
-        Assertions.assertEquals(expectingTasks.get(0).getDescription(), resultingTasks.get(0).getDescription());
-        Assertions.assertEquals(expectingTasks.get(0).isTaskStatus(), resultingTasks.get(0).isTaskStatus());
+        assertEquals(expectingTasks.get(0).getId(), resultingTasks.get(0).getId());
+        assertEquals(expectingTasks.get(0).getDescription(), resultingTasks.get(0).getDescription());
+        assertEquals(expectingTasks.get(0).isTaskStatus(), resultingTasks.get(0).isTaskStatus());
 
-        Assertions.assertEquals(expectingTasks.get(1).getId(), resultingTasks.get(1).getId());
-        Assertions.assertEquals(expectingTasks.get(1).getDescription(), resultingTasks.get(1).getDescription());
-        Assertions.assertEquals(expectingTasks.get(1).isTaskStatus(), resultingTasks.get(1).isTaskStatus());
+        assertEquals(expectingTasks.get(1).getId(), resultingTasks.get(1).getId());
+        assertEquals(expectingTasks.get(1).getDescription(), resultingTasks.get(1).getDescription());
+        assertEquals(expectingTasks.get(1).isTaskStatus(), resultingTasks.get(1).isTaskStatus());
     }
 }

@@ -26,6 +26,9 @@ public class TaskController {
     private final UserRepo userRepo;
     private final ClientRequests clientRequests;
 
+    private final char SERVER_ID = 'A';
+    private final char CLIENT_ID = 'B';
+
     @PostMapping
     public Task addTask(@RequestBody @Valid CommandDescriptionDto commandDescriptionDto, Principal principal){
         Task task = new Task(commandDescriptionDto.getText(), false, userRepo.findByUsername(principal.getName()));
@@ -37,10 +40,10 @@ public class TaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable() String id, Principal principal){
         switch (id.charAt(0)){
-            case 'A':
+            case SERVER_ID:
                 taskRepo.deleteTask(Long.parseLong(id.substring(1)), userRepo.findByUsername(principal.getName()));
                 break;
-            case 'B':
+            case CLIENT_ID:
                 clientRequests.deleteTask(Long.parseLong(id.substring(1)));
                 break;
         }
@@ -52,10 +55,10 @@ public class TaskController {
                          @PathVariable String id,
                          Principal principal){
         switch (id.charAt(0)){
-            case 'A':
+            case SERVER_ID:
                 taskRepo.editTask(Long.parseLong(id.substring(1)), newDescription, userRepo.findByUsername(principal.getName()));
                 break;
-            case 'B':
+            case CLIENT_ID:
                 clientRequests.editTask(Long.parseLong(id.substring(1)), newDescription);
                 break;
         }
@@ -66,12 +69,11 @@ public class TaskController {
     public List<DisplayTaskDto> getTasks(@RequestParam(name = "isAll") boolean isAll,
                                          @RequestParam(name= "search", required = false, defaultValue = "") String search,
                                          Principal principal){
-        StringBuilder sb = new StringBuilder();
         List<DisplayTaskDto> listTasks = new ArrayList<>();
         taskRepo.getFilteredTask(isAll, search, userRepo.findByUsername(principal.getName()))
                 .forEach(task -> listTasks.add(
                             new DisplayTaskDto(
-                                    sb.delete(0, sb.length()).append("A").append(task.getId()).toString(),
+                                    SERVER_ID + task.getId().toString(),
                                     task.getDescription(),
                                     task.getCompleted())
                     )
@@ -81,7 +83,7 @@ public class TaskController {
                 clientRequests.getList("ALL")
                         .forEach(task -> listTasks.add(
                                 new DisplayTaskDto(
-                                        sb.delete(0, sb.length()).append("B").append(task.getId()).toString(),
+                                        CLIENT_ID + task.getId().toString(),
                                         task.getDescription(),
                                         task.getTaskStatus() == TaskStatus.COMPLETED)
                                 )
@@ -90,11 +92,37 @@ public class TaskController {
                 clientRequests.getList("CREATED")
                         .forEach(task -> listTasks.add(
                                 new DisplayTaskDto(
-                                        sb.delete(0, sb.length()).append("B").append(task.getId()).toString(),
+                                        CLIENT_ID + task.getId().toString(),
                                         task.getDescription(),
                                         false)
                                 )
                         );
+            }
+        } else {
+            if (isAll){
+                clientRequests.getList("ALL")
+                        .forEach(task -> {
+                            if (task.getDescription().contains(search)) {
+                                listTasks.add(
+                                        new DisplayTaskDto(
+                                                CLIENT_ID + task.getId().toString(),
+                                                task.getDescription(),
+                                                task.getTaskStatus() == TaskStatus.COMPLETED)
+                                );
+                            }
+                        });
+            } else {
+                clientRequests.getList("CREATED")
+                        .forEach(task -> {
+                            if (task.getDescription().contains(search)) {
+                                listTasks.add(
+                                        new DisplayTaskDto(
+                                                CLIENT_ID + task.getId().toString(),
+                                                task.getDescription(),
+                                                false)
+                                );
+                            }
+                        });
             }
         }
         return listTasks;
@@ -105,10 +133,10 @@ public class TaskController {
     public void toggleTask(@PathVariable String id,
                            Principal principal){
         switch (id.charAt(0)){
-            case 'A':
+            case SERVER_ID:
                 taskRepo.toggleTask(Long.parseLong(id.substring(1)), userRepo.findByUsername(principal.getName()));
                 break;
-            case 'B':
+            case CLIENT_ID:
                 clientRequests.toggleTask(Long.parseLong(id.substring(1)));
                 break;
         }
