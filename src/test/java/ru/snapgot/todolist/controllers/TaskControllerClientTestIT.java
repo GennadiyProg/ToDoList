@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -20,6 +21,7 @@ import ru.snapgot.todolist.model.dto.DisplayTaskDto;
 import ru.snapgot.todolist.model.dto.TaskDto;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
+import ru.snapgot.todolist.service.impl.ServerTaskServiceImpl;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -35,10 +37,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @TestPropertySource("/application_test.properties")
 public class TaskControllerClientTestIT {
-    @Mock
+    @MockBean
     private TaskRepo taskRepo;
-    @Mock
-    private UserRepo userRepo;
     @Autowired
     private TaskController taskController;
     private final Principal principal = new UserPrincipal("User");
@@ -78,12 +78,12 @@ public class TaskControllerClientTestIT {
                 return true;
             }
         });
-        when(taskRepo.getFilteredTask(true, "", userRepo.findByUsername(principal.getName())))
+        when(taskRepo.getFilteredTask(true, "", null))
                 .thenReturn(tasks);
 
         List<DisplayTaskDto> expectingTasks = new ArrayList<>();
-        expectingTasks.add(new DisplayTaskDto("A3", "description", true));
         expectingTasks.add(new DisplayTaskDto("B3", "random task", false));
+        expectingTasks.add(new DisplayTaskDto("A3", "description", true));
 
         List<DisplayTaskDto> resultingTasks = taskController.getTasks(true, "", principal);
 

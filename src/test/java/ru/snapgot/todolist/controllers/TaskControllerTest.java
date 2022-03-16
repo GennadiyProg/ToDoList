@@ -39,10 +39,11 @@ class TaskControllerTest {
     public void addTask_createTaskAndSavedTask_Always() {
         CommandDescriptionDto dto = new CommandDescriptionDto();
         Task task = new Task(null, false, null);
+        when(taskService.save(null, null)).thenReturn(task);
 
         Task newTask = taskController.addTask(dto, principal);
 
-        verify(taskRepo, times(1)).save(task);
+        verify(taskService, times(1)).save(null, null);
         assertNull(newTask.getDescription());
         assertFalse(newTask.isCompleted());
         assertNull(newTask.getUser());
@@ -54,7 +55,7 @@ class TaskControllerTest {
 
         taskController.deleteTask(id, principal);
 
-        verify(taskRepo).deleteTask(1, null);
+        verify(taskService).delete(id, null);
         verifyNoMoreInteractions(taskRepo);
     }
 }
