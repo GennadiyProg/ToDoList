@@ -4,13 +4,13 @@ databaseChangeLog:
       author: gennadiy.rumyantsev
       changes:
         - addColumn:
-            tableName: Task
+            tableName: task
             columns:
               - column:
                   name: user_id
                   type: bigint
                   constraints:
-                    referencedTableName: Users
+                    referencedTableName: users
                     referencedColumnNames: id
                     foreignKeyName: user_id
                     deleteCascade: true

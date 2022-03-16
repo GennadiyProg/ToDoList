@@ -9,6 +9,7 @@ import org.springframework.test.context.TestPropertySource;
 import ru.snapgot.todolist.model.Role;
 import ru.snapgot.todolist.model.User;
 import ru.snapgot.todolist.repos.UserRepo;
+import ru.snapgot.todolist.service.impl.UserDetailsServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.snapgot.todolist.controllers.client.ClientRequests;
 import ru.snapgot.todolist.model.dto.CommandDescriptionDto;
 import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
+import ru.snapgot.todolist.service.CompositeTaskService;
 
 import java.security.Principal;
 
@@ -24,13 +24,14 @@ class TaskControllerTest {
     @Mock
     private UserRepo userRepo;
     @Mock
-    private ClientRequests clientRequests;
+    private CompositeTaskService taskService;
+
     TaskController taskController;
     private Principal principal = new UserPrincipal("User");
 
     @BeforeEach
     public void setUp(){
-        taskController = new TaskController(taskRepo, userRepo, clientRequests);
+        taskController = new TaskController(userRepo, taskService);
         when(userRepo.findByUsername(principal.getName())).thenReturn(null);
     }
 

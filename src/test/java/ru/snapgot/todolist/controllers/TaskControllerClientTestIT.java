@@ -40,7 +40,6 @@ public class TaskControllerClientTestIT {
     @Mock
     private UserRepo userRepo;
     @Autowired
-    private ClientRequests clientRequests;
     private TaskController taskController;
     private final Principal principal = new UserPrincipal("User");
 
@@ -54,19 +53,6 @@ public class TaskControllerClientTestIT {
         registry.add("feign.client.url", wm::baseUrl);
     }
 
-    @BeforeEach
-    public void setUp(){
-        taskController = new TaskController(taskRepo, userRepo, clientRequests);
-    }
-
-    @Test
-    public void deleteTask_SendDeleteRequestToClient_Always(WireMockRuntimeInfo wireMockRuntimeInfo){
-        WireMock wireMock = wireMockRuntimeInfo.getWireMock();
-        wireMock.register(delete("/tasks/12").willReturn(ok()));
-
-        taskController.deleteTask("B12", principal);
-        verify(deleteRequestedFor(urlEqualTo("/tasks/12")));
-    }
 
     @Test
     public void getTasks_ReturnRightTasksList_Always(WireMockRuntimeInfo wireMockRuntimeInfo){
