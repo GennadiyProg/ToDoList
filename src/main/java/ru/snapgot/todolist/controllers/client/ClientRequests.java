@@ -13,7 +13,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@FeignClient(name = "new-client", url = "${feign.client.url}")
+@FeignClient(name = "new-client", url = "${feign.client.url}", path = "/tasks")
 public interface ClientRequests {
     @PostMapping
     public ClientTaskDto create(@Valid @RequestBody CommandDescriptionDto request);

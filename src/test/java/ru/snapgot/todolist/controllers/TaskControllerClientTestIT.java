@@ -1,22 +1,20 @@
 package ru.snapgot.todolist.controllers;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.sun.security.auth.UserPrincipal;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.shaded.org.hamcrest.CoreMatchers;
-import org.testcontainers.shaded.org.hamcrest.MatcherAssert;
 import ru.snapgot.todolist.controllers.client.ClientRequests;
 import ru.snapgot.todolist.model.dto.DisplayTaskDto;
 import ru.snapgot.todolist.model.dto.TaskDto;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +34,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @TestPropertySource("/application_test.properties")
-@WireMockTest(httpPort = 8081)
 public class TaskControllerClientTestIT {
     @Mock
     private TaskRepo taskRepo;
@@ -45,6 +43,16 @@ public class TaskControllerClientTestIT {
     private ClientRequests clientRequests;
     private TaskController taskController;
     private final Principal principal = new UserPrincipal("User");
+
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+            .options(wireMockConfig().dynamicPort())
+            .build();
+
+    @DynamicPropertySource
+    static void registerDynamicProperties (DynamicPropertyRegistry registry) {
+        registry.add("feign.client.url", wm::baseUrl);
+    }
 
     @BeforeEach
     public void setUp(){
