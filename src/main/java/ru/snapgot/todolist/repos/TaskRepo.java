@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.snapgot.todolist.model.Task;
-import ru.snapgot.todolist.model.TaskDto;
+import ru.snapgot.todolist.model.dto.TaskDto;
 import ru.snapgot.todolist.model.User;
 
 import java.util.List;

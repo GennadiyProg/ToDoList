@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.service;
+package ru.snapgot.todolist.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

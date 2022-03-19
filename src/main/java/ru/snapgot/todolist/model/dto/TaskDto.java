@@ -1,4 +1,4 @@
-package ru.snapgot.todolist.model;
+package ru.snapgot.todolist.model.dto;
 
 public interface TaskDto {
     Long getId();

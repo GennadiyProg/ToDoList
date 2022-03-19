@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.snapgot.todolist.model.*;
+import ru.snapgot.todolist.model.dto.CommandDescriptionDto;
 import ru.snapgot.todolist.repos.TaskRepo;
 import ru.snapgot.todolist.repos.UserRepo;
 
@@ -78,10 +79,10 @@ class TaskControllerTestIT {
 
     @Test
     public void deleteTask_isAuthorizedAndDeleteTaskInRepo_Always() throws Exception {
-        taskRepo.save(task);
+        Task createdTask = taskRepo.save(task);
         assertEquals(1, taskRepo.count());
 
-        controller.deleteTask(3, principal);
+        controller.deleteTask("A" + createdTask.getId(), principal);
 
         assertEquals(0, taskRepo.count());
         mockMvc.perform(delete("/1")).andExpect(status().isUnauthorized());
@@ -92,7 +93,7 @@ class TaskControllerTestIT {
         String newDescription = "superTask";
         taskRepo.save(task);
 
-        controller.editTask(newDescription, 1, principal);
+        controller.editTask(newDescription, "A1", principal);
 
         assertEquals(newDescription, taskRepo.findById(1L).orElse(task).getDescription());
         mockMvc.perform(patch("/1/modification")).andExpect(status().isUnauthorized());
