@@ -13,6 +13,7 @@ import ru.snapgot.todolist.service.CompositeTaskService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Validated
 @RestController
@@ -44,8 +45,8 @@ public class TaskController {
     @GetMapping
     public List<DisplayTaskDto> getTasks(@RequestParam(name = "isAll") boolean isAll,
                                          @RequestParam(name= "search", required = false, defaultValue = "") String search,
-                                         Principal principal){
-        return taskService.get(isAll, search, userRepo.findByUsername(principal.getName()));
+                                         Principal principal) throws ExecutionException, InterruptedException {
+        return taskService.get(isAll, search, userRepo.findByUsername(principal.getName())).get();
     }
 
     @PatchMapping("{id}/completed")

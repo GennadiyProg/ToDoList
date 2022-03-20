@@ -1,6 +1,7 @@
 package ru.snapgot.todolist.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import ru.snapgot.todolist.model.Task;
 import ru.snapgot.todolist.model.User;
@@ -11,6 +12,8 @@ import ru.snapgot.todolist.service.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Component
 @RequiredArgsConstructor
@@ -40,12 +43,12 @@ public class TaskServiceImpl implements CompositeTaskService {
     }
 
     @Override
-    public List<DisplayTaskDto> get(boolean isAll, String search, User user) {
+    public Future<List<DisplayTaskDto>> get(boolean isAll, String search, User user) throws ExecutionException, InterruptedException {
         List<DisplayTaskDto> tasks = new ArrayList<>();
         for(TaskService service : taskServices){
-            tasks.addAll(service.get(isAll, search, user));
+            tasks.addAll(service.get(isAll, search, user).get());
         }
-        return tasks;
+        return AsyncResult.forValue(tasks);
     }
 
     private TaskService getSupportedService(String id){
