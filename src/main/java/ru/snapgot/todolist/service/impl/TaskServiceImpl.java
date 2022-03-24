@@ -44,10 +44,19 @@ public class TaskServiceImpl implements CompositeTaskService {
 
     @Override
     public Future<List<DisplayTaskDto>> get(boolean isAll, String search, User user) throws ExecutionException, InterruptedException {
-        List<DisplayTaskDto> tasks = new ArrayList<>();
+        List<Future<List<DisplayTaskDto>>> futureTasks = new ArrayList<>();
         for(TaskService service : taskServices){
-            tasks.addAll(service.get(isAll, search, user).get());
+            futureTasks.add(service.get(isAll, search, user));
         }
+
+        List<DisplayTaskDto> tasks = new ArrayList<>();
+        futureTasks.forEach(taskList -> {
+            try {
+                tasks.addAll(taskList.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
         return AsyncResult.forValue(tasks);
     }
 
