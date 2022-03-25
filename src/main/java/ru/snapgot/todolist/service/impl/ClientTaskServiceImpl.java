@@ -1,6 +1,8 @@
 package ru.snapgot.todolist.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import ru.snapgot.todolist.controllers.client.ClientRequests;
 import ru.snapgot.todolist.model.Task;
@@ -11,6 +13,7 @@ import ru.snapgot.todolist.service.PersonalTaskService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +42,9 @@ public class ClientTaskServiceImpl implements PersonalTaskService {
         clientRequests.toggleTask(Long.parseLong(id.substring(1)));
     }
 
+    @Async
     @Override
-    public List<DisplayTaskDto> get(boolean isAll, String search, User user) {
+    public Future<List<DisplayTaskDto>> get(boolean isAll, String search, User user) {
         List<DisplayTaskDto> listTasks = new ArrayList<>();
         if (search.equals("")){
             if (isAll){
@@ -89,7 +93,7 @@ public class ClientTaskServiceImpl implements PersonalTaskService {
                         });
             }
         }
-        return listTasks;
+        return AsyncResult.forValue(listTasks);
     }
 
     @Override

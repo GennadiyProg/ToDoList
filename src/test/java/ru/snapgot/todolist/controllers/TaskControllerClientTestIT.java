@@ -26,6 +26,7 @@ import ru.snapgot.todolist.service.impl.ServerTaskServiceImpl;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -55,7 +56,7 @@ public class TaskControllerClientTestIT {
 
 
     @Test
-    public void getTasks_ReturnRightTasksList_Always(WireMockRuntimeInfo wireMockRuntimeInfo){
+    public void getTasks_ReturnRightTasksList_Always(WireMockRuntimeInfo wireMockRuntimeInfo) throws ExecutionException, InterruptedException {
         WireMock wireMock = wireMockRuntimeInfo.getWireMock();
         wireMock.register(get("/tasks?printMod=ALL").willReturn(
                 okJson("[{\"id\":3, \"description\":\"random task\", \"taskStatus\":\"CREATED\"}]"))
